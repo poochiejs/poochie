@@ -57,7 +57,6 @@
 
 
 var deps = [
-    'interface.js',
     'observable.js'
 ];
 
@@ -65,11 +64,11 @@ var toDomInterface = {
     toDom: function() {}
 };
 
-function onReady(iface, observable) {
+function onReady(observable) {
 
     // Add style 's' with value 'style[s]' to the DOM element 'e'.
     function addStyle(e, style, s) {
-        if (iface.supportsInterface(style[s], observable.IObservable)) {
+        if (style[s] instanceof observable.Observable) {
             e.style[s] = style[s].get();
             style[s].subscribe(function(obs) {e.style[s] = obs.get();});
         } else {
@@ -79,7 +78,7 @@ function onReady(iface, observable) {
 
     // Add attribute 'k' with value 'v' to the DOM element 'e'.
     function addAttribute(e, k, v) {
-        if (iface.supportsInterface(v, observable.IObservable)) {
+        if (v instanceof observable.Observable) {
             e.setAttribute(k, v.get());
             v.subscribe(function(obs) {e[k] = obs.get();});
         } else {
@@ -94,7 +93,7 @@ function onReady(iface, observable) {
             for (var i = 0; i < xs.length; i++) {
                 var x = xs[i];
                 x = typeof x === 'string' ? document.createTextNode(x) : x;
-                e.appendChild(iface.supportsInterface(x, toDomInterface) ? x.toDom() : x);
+                e.appendChild(typeof x.toDom === 'function' ? x.toDom() : x);
             }
         };
     }
@@ -138,7 +137,7 @@ function onReady(iface, observable) {
             if (typeof xs === 'string') {
                 e.appendChild(document.createTextNode(xs));
             } else {
-                if (iface.supportsInterface(xs, observable.IObservable)) {
+                if (xs instanceof observable.Observable) {
                     var xsObs = xs;
                     xs = xsObs.get();
                     xsObs.subscribe(mkSetChildren(e));
@@ -147,7 +146,7 @@ function onReady(iface, observable) {
                 for (var i = 0; i < xs.length; i++) {
                     var x = xs[i];
                     x = typeof x === 'string' ? document.createTextNode(x) : x;
-                    e.appendChild(iface.supportsInterface(x, toDomInterface) ? x.toDom() : x);
+                    e.appendChild(typeof x.toDom === 'function' ? x.toDom() : x);
                 }
             }
         }

@@ -2,43 +2,33 @@
 // Observable JS
 //
 
-var IObservable = {
-    get:       function() {},
-    subscribe: function(f) {}
+// Observable values
+function Observable(v) {
+    this.value = v;
+}
+
+Observable.prototype.set = function(v) {
+    this.value = v;
+    if (this.subscribers) {
+        this.subscribers.forEach(function(f) {
+            f(this);
+        });
+    }
+    return this;
 };
 
-// Observable values
-function observe(v) {
-    var me = {
-        value: v,
-        constructor: observe
-    };
+Observable.prototype.get = function() {
+    return this.value;
+};
 
-    me.set = function(v) {
-        me.value = v;
-        if (me.subscribers) {
-            me.subscribers.forEach(function(f) {
-                f(me);
-            });
-        }
-        return me;
-    };
-
-    me.get = function() {
-        return me.value;
-    };
-
-    me.subscribe = function(f) {
-        if (!me.subscribers) {
-            me.subscribers = [f];
-        } else {
-            me.subscribers.push(f);
-        }
-        return me;
-    };
-
-    return me;
-}
+Observable.prototype.subscribe = function(f) {
+    if (!this.subscribers) {
+        this.subscribers = [f];
+    } else {
+        this.subscribers.push(f);
+    }
+    return this;
+};
 
 // Observable computations.  thunk() takes a list of observables
 // and a callback function and returns an observable.  Any time
@@ -134,8 +124,12 @@ function snapshot(o) {
     }
 }
 
+function observe(v) {
+    return new Observable(v);
+}
+
 yoink.define({
-    IObservable: IObservable,
+    Observable: Observable,
     observe: observe,
     thunk: thunk,
     lift: lift,

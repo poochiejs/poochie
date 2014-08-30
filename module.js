@@ -1,5 +1,5 @@
 //
-// Experiment: a module constructor for modules.  This object implements the ToDom interface
+// Experiment: a module constructor for modules.  This object implements the ToDom method.
 //
 
 function module(o1) {

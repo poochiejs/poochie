@@ -8,7 +8,7 @@ var  deps = [
 ];
 
 function onReady (observable, assert) {
-    
+
     // Observable values without objects.
     var x = observable.observe(5);
     var y = observable.observe(6);
@@ -51,6 +51,9 @@ function onReady (observable, assert) {
 
     // Call get() to update the computation tree
     assert.assertEq( comp.get(), 11 );
+
+    // Verify observables are instances of Observable
+    assert.assertEq(x instanceof observable.Observable, true);
 
     yoink.define('passed!');
 }

@@ -3,8 +3,6 @@ var deps = [
 ];
 
 var modules = [
-    'interface',
-    'interface_test',
     'layout',
     'observable',
     'observable_test'
