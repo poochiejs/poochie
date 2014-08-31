@@ -1,30 +1,30 @@
 //
 // Copyright (c) 2011-2012 Greg Fitzgerald, IContrib.org
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this
 // software and associated documentation files (the "Software"), to deal in the Software
-// without restriction, including without limitation the rights to use, copy, modify, 
-// merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit 
+// without restriction, including without limitation the rights to use, copy, modify,
+// merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 // persons to whom the Software is furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all copies or 
+// The above copyright notice and this permission notice shall be included in all copies or
 // substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-// PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
-// FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+// PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+// FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 //
 //
 // Module name:
 //
-//     Tag
+//     tag
 //
 // Description:
 //
-//     Tag is a JavaScript module for creating HTML elements.
+//     'tag' is a JavaScript module for creating HTML elements.
 //     The module exposes two object constructors, 'createElement' and 'tag'.
 //     The functions accept the same arguments, an HTML tag name, an attributes
 //     object, an array of subelements, and an eventHandlers object.  The
@@ -43,11 +43,11 @@
 //     A: Instead of setting the attribute directly, express the dependency with
 //        an Observable variable.  Your event handler should set the observable
 //        variable and your tag should be constructed using the observable.  The
-//        Tag library will detect the observable attribute and update the DOM
+//        tag library will detect the observable attribute and update the DOM
 //        element any time its value changes.
 //
 //
-//     Q: Why doesn't tag() automatically create observables for every tag 
+//     Q: Why doesn't tag() automatically create observables for every tag
 //        attribute.
 //
 //     A: If your application is mostly static content, creating the extra
@@ -95,7 +95,7 @@ function onReady(observable) {
     }
 
 
-    // Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty', 
+    // Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty',
     // an array of subelements 'xs', and an object of event handlers 'es'.
     function createElement(ps) {
 
@@ -126,7 +126,7 @@ function onReady(observable) {
                 }
             }
         }
-    
+
         // Add child elements
         var xs = ps.contents;
         if (xs) {
@@ -146,7 +146,7 @@ function onReady(observable) {
                 }
             }
         }
-    
+
         // Add event handlers
         var es = ps.handlers;
         if (typeof es === 'object') {
@@ -180,50 +180,49 @@ function onReady(observable) {
     //
     // tag({name, attributes, style, contents, handlers})
     //
-    function tag(as) {
+    function Tag(as) {
 
         if (typeof as === 'string') {
             as = {name: as};
         }
 
-        var me = {
-            constructor: tag,
-            name:        as.name
-        };
+        this.name = as.name;
 
-        me.render = function() {
-           return createElement(me);
-        };
+        if (as.attributes !== undefined) { this.attributes = as.attributes; }
+        if (as.style      !== undefined) { this.style      = as.style; }
+        if (as.contents   !== undefined) { this.contents   = as.contents; }
+        if (as.handlers   !== undefined) { this.handlers   = as.handlers; }
+    }
 
-        me.setPosition = function (pos) {
-            if (!me.attributes) {
-                me.attributes = {};
-            }
+    Tag.prototype.render = function() {
+         return createElement(this);
+    };
 
-            if (!me.style) {
-                me.style = {};
-            }
+    Tag.prototype.setPosition = function (pos) {
+        if (!this.attributes) {
+            this.attributes = {};
+        }
 
-            mixin(me.style, pos);
+        if (!this.style) {
+            this.style = {};
+        }
 
-            return me;
-        };
+        mixin(this.style, pos);
 
-        if (as.attributes !== undefined) { me.attributes = as.attributes; }
-        if (as.style      !== undefined) { me.style      = as.style; }
-        if (as.contents   !== undefined) { me.contents   = as.contents; }
-        if (as.handlers   !== undefined) { me.handlers   = as.handlers; }
+        return this;
+    };
 
-        return me;
+    function tag(as) {
+        return new Tag(as);
     }
 
     yoink.define({
         createElement: createElement,
         mixin:         mixin,
         cascadeStyles: cascadeStyles,
+        Tag:           Tag,
         tag:           tag
     });
-    
 }
 
 yoink.require(deps, onReady);

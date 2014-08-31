@@ -34,45 +34,12 @@ Observable.prototype.subscribe = function(f) {
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
-function thunk(xs, f) {
-    var me = {
-        valid: false,
-        f: f,
-        publishers: xs,
-        constructor: thunk
-    };
+function Thunk(xs, f) {
+    this.valid = false;
+    this.f = f;
+    this.publishers = xs;
 
-    me.get = function() {
-       if (me.valid) {
-         return me.value;
-       } else {
-         var vals = me.publishers.map(function(o){
-             return o.get && o.subscribe ? o.get() : o;
-         });
-
-         var oldValue = me.value;
-         me.value = me.f.apply(null, vals);
-         me.valid = true;
-
-         if (me.value !== oldValue && me.subscribers) {
-             me.subscribers.forEach(function(f) {
-                 f(me);
-             });
-         }
-
-         return me.value;
-       }
-    };
-
-    me.subscribe = function(f) {
-        if (!me.subscribers) {
-            me.subscribers = [f];
-        } else {
-            me.subscribers.push(f);
-        }
-        return me;
-    };
-
+    var me = this;  // Avoid 'this' ambiguity.
     xs.forEach(function(o) {
         if (o.get && o.subscribe) {
             o.subscribe(function (val, obs) {
@@ -87,8 +54,41 @@ function thunk(xs, f) {
             });
         }
     });
+}
 
-    return me;
+Thunk.prototype.get = function() {
+   if (this.valid) {
+     return this.value;
+   } else {
+     var vals = this.publishers.map(function(o){
+         return o.get && o.subscribe ? o.get() : o;
+     });
+
+     var oldValue = this.value;
+     this.value = this.f.apply(null, vals);
+     this.valid = true;
+
+     if (this.value !== oldValue && this.subscribers) {
+         this.subscribers.forEach(function(f) {
+             f(this);
+         });
+     }
+
+     return this.value;
+   }
+};
+
+Thunk.prototype.subscribe = function(f) {
+    if (!this.subscribers) {
+        this.subscribers = [f];
+    } else {
+        this.subscribers.push(f);
+    }
+    return this;
+};
+
+function thunk(xs, f) {
+    return new Thunk(xs, f);
 }
 
 // Handy function to lift a raw function into the observable realm
@@ -131,6 +131,7 @@ function observe(v) {
 yoink.define({
     Observable: Observable,
     observe: observe,
+    Thunk: Thunk,
     thunk: thunk,
     lift: lift,
     snapshot: snapshot
