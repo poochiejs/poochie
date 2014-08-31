@@ -34,6 +34,8 @@ Observable.prototype.subscribe = function(f) {
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
+Thunk.prototype = new Observable();
+Thunk.prototype.constructor = Thunk;
 function Thunk(xs, f) {
     this.valid = false;
     this.f = f;
