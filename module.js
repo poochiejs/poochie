@@ -5,7 +5,7 @@
 function module(o1) {
     var o2 = {
         constructor: module,
-        toDom: function (me) {
+        render: function (me) {
             var funcs = [];
             var constants = [];
             for (var k in me) {

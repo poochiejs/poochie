@@ -31,7 +31,7 @@
 //     difference is that 'tag' postpones the creation of an underlying DOM
 //     element, whereas 'createElement' creates and returns the DOM element.
 //
-//     createElement(x) === tag(x).toDom()
+//     createElement(x) === tag(x).render()
 //
 //     By postponing the creation of the DOM, we can unit test modules
 //     that return tag objects without requiring a browser or a browser
@@ -59,10 +59,6 @@
 var deps = [
     'observable.js'
 ];
-
-var toDomInterface = {
-    toDom: function() {}
-};
 
 function onReady(observable) {
 
@@ -93,7 +89,7 @@ function onReady(observable) {
             for (var i = 0; i < xs.length; i++) {
                 var x = xs[i];
                 x = typeof x === 'string' ? document.createTextNode(x) : x;
-                e.appendChild(typeof x.toDom === 'function' ? x.toDom() : x);
+                e.appendChild(typeof x.render === 'function' ? x.render() : x);
             }
         };
     }
@@ -146,7 +142,7 @@ function onReady(observable) {
                 for (var i = 0; i < xs.length; i++) {
                     var x = xs[i];
                     x = typeof x === 'string' ? document.createTextNode(x) : x;
-                    e.appendChild(typeof x.toDom === 'function' ? x.toDom() : x);
+                    e.appendChild(typeof x.render === 'function' ? x.render() : x);
                 }
             }
         }
@@ -195,7 +191,7 @@ function onReady(observable) {
             name:        as.name
         };
 
-        me.toDom = function() {
+        me.render = function() {
            return createElement(me);
         };
 
