@@ -10,8 +10,9 @@ function Observable(v) {
 Observable.prototype.set = function(v) {
     this.value = v;
     if (this.subscribers) {
+        var me = this
         this.subscribers.forEach(function(f) {
-            f(this);
+            f(me);
         });
     }
     return this;
@@ -71,8 +72,9 @@ Thunk.prototype.get = function() {
      this.valid = true;
 
      if (this.value !== oldValue && this.subscribers) {
+         var me = this;
          this.subscribers.forEach(function(f) {
-             f(this);
+             f(me);
          });
      }
 
