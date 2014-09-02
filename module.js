@@ -75,7 +75,7 @@ function addConstants(div, constants) {
     }
 }
 
-yoink.define({
+define({
     module: module
 });
 

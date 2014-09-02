@@ -75,12 +75,12 @@ function onReady(tag, observable) {
         return cat(as, xs, setPos);
     }
     
-    yoink.define({
+    define({
         hcat: hcat,
         vcat: vcat,
         gap: gap
     });
 }
 
-yoink.require(deps, onReady);
+require(deps, onReady);
 

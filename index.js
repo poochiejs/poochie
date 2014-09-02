@@ -29,8 +29,8 @@ function onReady (tag) {
         contents: rows.concat(modules.map(mkRow))
     });
 
-    yoink.define(body);
+    define(body);
 }
 
-yoink.require(deps, onReady);
+require(deps, onReady);
 

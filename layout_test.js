@@ -59,8 +59,8 @@ function onReady(layout, assert) {
     eq(g2.style.cssFloat, 'right');
     eq(g2.style.clear, 'both');
 
-    yoink.define('passed!');
+    define('passed!');
 }
 
-yoink.require(deps, onReady);
+require(deps, onReady);
 

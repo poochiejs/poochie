@@ -78,7 +78,7 @@ function onReady(observable) {
             e.setAttribute(k, v.get());
             v.subscribe(function(obs) {e[k] = obs.get();});
             if (v.set) {
-                 e.addEventListener('change', function(evt) {v.set(evt.target[k])});
+                 e.addEventListener('change', function(evt) {v.set(evt.target[k]);});
             }
         } else {
             e.setAttribute(k, v);
@@ -219,7 +219,7 @@ function onReady(observable) {
         return new Tag(as);
     }
 
-    yoink.define({
+    define({
         createElement: createElement,
         mixin:         mixin,
         cascadeStyles: cascadeStyles,
@@ -228,6 +228,6 @@ function onReady(observable) {
     });
 }
 
-yoink.require(deps, onReady);
+require(deps, onReady);
 
 

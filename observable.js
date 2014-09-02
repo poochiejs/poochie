@@ -10,7 +10,7 @@ function Observable(v) {
 Observable.prototype.set = function(v) {
     this.value = v;
     if (this.subscribers) {
-        var me = this
+        var me = this;
         this.subscribers.forEach(function(f) {
             f(me);
         });
@@ -132,7 +132,7 @@ function observe(v) {
     return new Observable(v);
 }
 
-yoink.define({
+define({
     Observable: Observable,
     observe: observe,
     Thunk: Thunk,

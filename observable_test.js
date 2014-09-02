@@ -58,8 +58,8 @@ function onReady (observable, assert) {
     // Verify thunks are instances of Observable
     assert.assertEq(comp instanceof observable.Observable, true);
 
-    yoink.define('passed!');
+    define('passed!');
 }
 
-yoink.require(deps, onReady);
+require(deps, onReady);
     

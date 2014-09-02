@@ -13,8 +13,8 @@ function onReady (tag, assert) {
     assert.assertEq(t.name, 'p');
     assert.assertEq(t.contents, 'hello');
 
-    yoink.define('passed!');
+    define('passed!');
 }
 
-yoink.require(deps, onReady);
+require(deps, onReady);
     
