@@ -77,6 +77,9 @@ function onReady(observable) {
         if (v instanceof observable.Observable) {
             e.setAttribute(k, v.get());
             v.subscribe(function(obs) {e[k] = obs.get();});
+            if (v.set) {
+                 e.addEventListener('change', function(evt) {v.set(evt.target[k])});
+            }
         } else {
             e.setAttribute(k, v);
         }
