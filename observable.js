@@ -15,14 +15,14 @@ Observable.prototype.subscribe = function(f) {
 };
 
 // Observable values
-Subject.prototype = new Observable();
-Subject.prototype.constructor = Subject;
+Publisher.prototype = new Observable();
+Publisher.prototype.constructor = Publisher;
 
-function Subject(v) {
+function Publisher(v) {
     this.value = v;
 }
 
-Subject.prototype.set = function(v) {
+Publisher.prototype.set = function(v) {
     this.value = v;
     if (this.subscribers) {
         var me = this;
@@ -33,24 +33,24 @@ Subject.prototype.set = function(v) {
     return this;
 };
 
-Subject.prototype.get = function() {
+Publisher.prototype.get = function() {
     return this.value;
 };
 
 
-// Observable computations.  thunk() takes a list of observables
+// Observable computations.  observer() takes a list of observables
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
-Thunk.prototype = new Observable();
-Thunk.prototype.constructor = Thunk;
-function Thunk(xs, f) {
+Observer.prototype = new Observable();
+Observer.prototype.constructor = Observer;
+function Observer(args, f) {
     this.valid = false;
     this.f = f;
-    this.publishers = xs;
+    this.args = args;
 
     var me = this;  // Avoid 'this' ambiguity.
-    xs.forEach(function(o) {
+    args.forEach(function(o) {
         if (o.get && o.subscribe) {
             o.subscribe(function (val, obs) {
                 if (me.valid) {
@@ -66,11 +66,11 @@ function Thunk(xs, f) {
     });
 }
 
-Thunk.prototype.get = function() {
+Observer.prototype.get = function() {
    if (this.valid) {
      return this.value;
    } else {
-     var vals = this.publishers.map(function(o){
+     var vals = this.args.map(function(o){
          return o.get && o.subscribe ? o.get() : o;
      });
 
@@ -89,15 +89,15 @@ Thunk.prototype.get = function() {
    }
 };
 
-function thunk(xs, f) {
-    return new Thunk(xs, f);
+function observer(args, f) {
+    return new Observer(args, f);
 }
 
 // Handy function to lift a raw function into the observable realm
 function lift(f) {
     return function() {
        var args = Array.prototype.slice.call(arguments);
-       return thunk(args, f);
+       return observer(args, f);
     };
 }
 
@@ -126,17 +126,21 @@ function snapshot(o) {
     }
 }
 
-function observe(v) {
-    return new Subject(v);
+function publisher(v) {
+    return new Publisher(v);
 }
 
 define({
     Observable: Observable,
-    Subject: Subject,
-    observe: observe,
-    Thunk: Thunk,
-    thunk: thunk,
+    Publisher: Publisher,
+    publisher: publisher,
+    Observer: Observer,
+    observer: observer,
     lift: lift,
-    snapshot: snapshot
+    snapshot: snapshot,
+
+    // deprecated aliases
+    observe: publisher,
+    thunk: observer
 });
 
