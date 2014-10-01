@@ -2,6 +2,9 @@
 // Observable JS
 //
 
+// Publishers and Subscribers share the Observable
+// interface, which includes a get() and subscribe()
+// function.
 function Observable() {
 }
 
@@ -38,20 +41,20 @@ Publisher.prototype.get = function() {
 };
 
 
-// Observable computations.  observer() takes a list of observables
+// Observable computations.  subscriber() takes a list of observables
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
-Observer.prototype = new Observable();
-Observer.prototype.constructor = Observer;
-function Observer(args, f) {
+Subscriber.prototype = new Observable();
+Subscriber.prototype.constructor = Subscriber;
+function Subscriber(args, f) {
     this.valid = false;
     this.f = f;
     this.args = args;
 
     var me = this;  // Avoid 'this' ambiguity.
     args.forEach(function(o) {
-        if (o.get && o.subscribe) {
+        if (o instanceof Observable) {
             o.subscribe(function (val, obs) {
                 if (me.valid) {
                     me.valid = false;
@@ -66,12 +69,12 @@ function Observer(args, f) {
     });
 }
 
-Observer.prototype.get = function() {
+Subscriber.prototype.get = function() {
    if (this.valid) {
      return this.value;
    } else {
      var vals = this.args.map(function(o){
-         return o.get && o.subscribe ? o.get() : o;
+         return o instanceof Observable ? o.get() : o;
      });
 
      var oldValue = this.value;
@@ -89,15 +92,15 @@ Observer.prototype.get = function() {
    }
 };
 
-function observer(args, f) {
-    return new Observer(args, f);
+function subscriber(args, f) {
+    return new Subscriber(args, f);
 }
 
 // Handy function to lift a raw function into the observable realm
 function lift(f) {
     return function() {
        var args = Array.prototype.slice.call(arguments);
-       return observer(args, f);
+       return subscriber(args, f);
     };
 }
 
@@ -134,13 +137,13 @@ define({
     Observable: Observable,
     Publisher: Publisher,
     publisher: publisher,
-    Observer: Observer,
-    observer: observer,
+    Subscriber: Subscriber,
+    subscriber: subscriber,
     lift: lift,
     snapshot: snapshot,
 
     // deprecated aliases
     observe: publisher,
-    thunk: observer
+    thunk: subscriber
 });
 

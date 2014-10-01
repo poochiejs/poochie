@@ -20,9 +20,9 @@ function onReady (observable, assert) {
     assert.assertEq(x.get(), 3);
 
 
-    // Test observer
+    // Test subscriber
     var rawAdd = function(a,b) {return a + b;};
-    var comp = observable.observer([x, y], rawAdd);
+    var comp = observable.subscriber([x, y], rawAdd);
     assert.assertEq(comp.set, undefined);
     assert.assertEq( comp.get(), 9 );
 
@@ -56,7 +56,7 @@ function onReady (observable, assert) {
     // Verify observables are instances of Observable
     assert.assertEq(x instanceof observable.Observable, true);
 
-    // Verify observers are instances of Observable
+    // Verify subscribers are instances of Observable
     assert.assertEq(comp instanceof observable.Observable, true);
 
     define('passed!');
