@@ -23,6 +23,7 @@ function onReady (observable, assert) {
     // Test thunk
     var rawAdd = function(a,b) {return a + b;};
     var comp = observable.thunk([x, y], rawAdd);
+    assert.assertEq(comp.set, undefined);
     assert.assertEq( comp.get(), 9 );
 
     x.set(5);

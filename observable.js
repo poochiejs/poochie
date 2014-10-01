@@ -2,12 +2,27 @@
 // Observable JS
 //
 
+function Observable() {
+}
+
+Observable.prototype.subscribe = function(f) {
+    if (!this.subscribers) {
+        this.subscribers = [f];
+    } else {
+        this.subscribers.push(f);
+    }
+    return this;
+};
+
 // Observable values
-function Observable(v) {
+Subject.prototype = new Observable();
+Subject.prototype.constructor = Subject;
+
+function Subject(v) {
     this.value = v;
 }
 
-Observable.prototype.set = function(v) {
+Subject.prototype.set = function(v) {
     this.value = v;
     if (this.subscribers) {
         var me = this;
@@ -18,18 +33,10 @@ Observable.prototype.set = function(v) {
     return this;
 };
 
-Observable.prototype.get = function() {
+Subject.prototype.get = function() {
     return this.value;
 };
 
-Observable.prototype.subscribe = function(f) {
-    if (!this.subscribers) {
-        this.subscribers = [f];
-    } else {
-        this.subscribers.push(f);
-    }
-    return this;
-};
 
 // Observable computations.  thunk() takes a list of observables
 // and a callback function and returns an observable.  Any time
@@ -82,15 +89,6 @@ Thunk.prototype.get = function() {
    }
 };
 
-Thunk.prototype.subscribe = function(f) {
-    if (!this.subscribers) {
-        this.subscribers = [f];
-    } else {
-        this.subscribers.push(f);
-    }
-    return this;
-};
-
 function thunk(xs, f) {
     return new Thunk(xs, f);
 }
@@ -129,11 +127,12 @@ function snapshot(o) {
 }
 
 function observe(v) {
-    return new Observable(v);
+    return new Subject(v);
 }
 
 define({
     Observable: Observable,
+    Subject: Subject,
     observe: observe,
     Thunk: Thunk,
     thunk: thunk,
