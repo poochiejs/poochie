@@ -8,17 +8,17 @@
 // To put space between elements, use the gap(nPixels) function.
 
 var deps = [
-    'tag.js',
+    'dom.js',
     'observable.js'
 ];
 
-function onReady(tag, observable) {
+function onReady(dom, observable) {
 
     // gap(n)
     //
     //     Create empty space of 'n' pixels wide and 'n' pixels tall.
     function gap(n) {
-        return tag.tag({name: 'div', style: {width: n + 'px', height: n + 'px'}});
+        return dom.element({name: 'div', style: {width: n + 'px', height: n + 'px'}});
     }
     
     // Concatenate elements
@@ -30,7 +30,7 @@ function onReady(tag, observable) {
         for (var i = 0; i < xs.length; i += 1) {
             setPos(xs[i]);
         }
-        return tag.tag({name: 'div', contents: ys});
+        return dom.element({name: 'div', contents: ys});
     }
     
     // Set the horizontal position of a 2D element

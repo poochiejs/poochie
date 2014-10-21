@@ -3,13 +3,13 @@
 //
 
 var  deps = [
-    'tag.js',
+    'dom.js',
     'assert.js'
 ];
 
-function onReady (tag, assert) {
+function onReady (dom, assert) {
 
-    var t = tag.tag({name: 'p', contents: 'hello'});
+    var t = dom.element({name: 'p', contents: 'hello'});
     assert.assertEq(t.name, 'p');
     assert.assertEq(t.contents, 'hello');
 

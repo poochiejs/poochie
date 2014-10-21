@@ -1,5 +1,5 @@
 var deps = [
-    'tag.js'
+    'dom.js'
 ];
 
 var modules = [
@@ -8,10 +8,10 @@ var modules = [
     'observable_test'
 ];
 
-function onReady (tag) {
+function onReady (dom) {
 
     function mkRow (nm) {
-        return tag.tag({
+        return dom.element({
             name: 'a',
             attributes: {href: nm},
             style: {display: 'block'},
@@ -20,10 +20,10 @@ function onReady (tag) {
     }
     
     var rows = [
-        tag.tag({name: 'h3', contents: 'Modules'})
+        dom.element({name: 'h3', contents: 'Modules'})
     ];
 
-    var body = tag.tag({
+    var body = dom.element({
         name: 'div',
         style: {margin: '10px'},
         contents: rows.concat(modules.map(mkRow))

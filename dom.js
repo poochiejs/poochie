@@ -1,21 +1,21 @@
 //
 // Module name:
 //
-//     tag
+//     dom
 //
 // Description:
 //
-//     'tag' is a JavaScript module for creating HTML elements.
-//     The module exposes two object constructors, 'createElement' and 'tag'.
+//     'dom' is a JavaScript module for creating HTML elements.
+//     The module exposes two object constructors, 'createElement' and 'element'.
 //     The functions accept the same arguments, an HTML tag name, an attributes
 //     object, an array of subelements, and an eventHandlers object.  The
-//     difference is that 'tag' postpones the creation of an underlying DOM
+//     difference is that 'element' postpones the creation of an underlying DOM
 //     element, whereas 'createElement' creates and returns the DOM element.
 //
-//     createElement(x) === tag(x).render()
+//     createElement(x) === element(x).render()
 //
 //     By postponing the creation of the DOM, we can unit test modules
-//     that return tag objects without requiring a browser or a browser
+//     that return element objects without requiring a browser or a browser
 //     simulator such as JsDom or Zombie.  A bare-bones JavaScript interpreter
 //     such as Node.js will suffice.
 //
@@ -23,12 +23,12 @@
 //
 //     A: Instead of setting the attribute directly, express the dependency with
 //        an Observable variable.  Your event handler should set the observable
-//        variable and your tag should be constructed using the observable.  The
-//        tag library will detect the observable attribute and update the DOM
+//        variable and your element should be constructed using the observable.  The
+//        dom library will detect the observable attribute and update the DOM
 //        element any time its value changes.
 //
 //
-//     Q: Why doesn't tag() automatically create observables for every tag
+//     Q: Why doesn't element() automatically create observables for every element
 //        attribute.
 //
 //     A: If your application is mostly static content, creating the extra
@@ -162,9 +162,9 @@ function onReady(observable) {
     }
 
     //
-    // tag({name, attributes, style, contents, handlers})
+    // element({name, attributes, style, contents, handlers})
     //
-    function Tag(as) {
+    function Element(as) {
 
         if (typeof as === 'string') {
             as = {name: as};
@@ -178,11 +178,11 @@ function onReady(observable) {
         if (as.handlers   !== undefined) { this.handlers   = as.handlers; }
     }
 
-    Tag.prototype.render = function() {
+    Element.prototype.render = function() {
          return createElement(this);
     };
 
-    Tag.prototype.setPosition = function (pos) {
+    Element.prototype.setPosition = function (pos) {
         if (!this.attributes) {
             this.attributes = {};
         }
@@ -196,16 +196,16 @@ function onReady(observable) {
         return this;
     };
 
-    function tag(as) {
-        return new Tag(as);
+    function element(as) {
+        return new Element(as);
     }
 
     define({
         createElement: createElement,
         mixin:         mixin,
         cascadeStyles: cascadeStyles,
-        Tag:           Tag,
-        tag:           tag
+        Element:       Element,
+        element:       element
     });
 }
 
