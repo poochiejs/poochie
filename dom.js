@@ -144,15 +144,22 @@ function onReady(observable) {
         return e;
     }
 
-    // Overwrite 'obj' with defined keys in 'newObj'
-    function mixin(obj, newObj) {
-        for (var k in newObj) {
-            if (newObj.hasOwnProperty(k) && newObj[k] !== undefined) {
-                obj[k] = newObj[k];
+    // Return the union of 'o1' and 'o2'.  When both contain the
+    // same key, the value in 'o2' takes precedence.
+    function mixin(o1, o2) {
+        var o3 = {};
+        var k;
+        for (k in o1) {
+            if (o1.hasOwnProperty(k)) {
+                o3[k] = o1[k];
             }
         }
-
-        return obj;
+        for (k in o2) {
+            if (o2.hasOwnProperty(k) && o2[k] !== undefined) {
+                o3[k] = o2[k];
+            }
+        }
+        return o3;
     }
 
     // left-fold style objects
@@ -180,20 +187,6 @@ function onReady(observable) {
 
     Element.prototype.render = function() {
          return createElement(this);
-    };
-
-    Element.prototype.setPosition = function (pos) {
-        if (!this.attributes) {
-            this.attributes = {};
-        }
-
-        if (!this.style) {
-            this.style = {};
-        }
-
-        mixin(this.style, pos);
-
-        return this;
     };
 
     function element(as) {

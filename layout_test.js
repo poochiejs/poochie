@@ -27,10 +27,12 @@ function onReady(layout, assert) {
     // To concatenate zero elements will still create a div.
     eq(hcat([]).name, 'div');
 
-    // hcat modifies its input elements
+    // hcat returns a new div for its input elements
     var g1 = gap(1);
     var g2 = gap(2);
-    hcat([g1, g2]);
+    var div = hcat([g1, g2]);
+    g1 = div.contents[0];
+    g2 = div.contents[1];
     eq(g1.style.cssFloat, 'left');
     eq(g1.style.clear, 'none');
     eq(g2.style.cssFloat, 'left');
@@ -41,10 +43,12 @@ function onReady(layout, assert) {
     // vcat
     //
 
-    // vcat modifies its input elements
+    // vcat returns a new div containing its input elements
     g1 = gap(1);
     g2 = gap(2);
-    vcat([g1, g2]);
+    div = vcat([g1, g2]);
+    g1 = div.contents[0];
+    g2 = div.contents[1];
     eq(g1.style.cssFloat, 'left');
     eq(g1.style.clear, 'both');
     eq(g2.style.cssFloat, 'left');
@@ -53,7 +57,9 @@ function onReady(layout, assert) {
     // vcat can right-align elements
     g1 = gap(1);
     g2 = gap(2);
-    vcat({align: 'right'}, [g1, g2]);
+    div = vcat({align: 'right'}, [g1, g2]);
+    g1 = div.contents[0];
+    g2 = div.contents[1];
     eq(g1.style.cssFloat, 'right');
     eq(g1.style.clear, 'both');
     eq(g2.style.cssFloat, 'right');

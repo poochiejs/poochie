@@ -24,18 +24,35 @@ function onReady(dom, observable) {
     // Concatenate elements
     function cat(as, xs, setPos) {
         var ys = xs;
+        var zs = {};
         if (ys instanceof observable.Observable) {
             xs = ys.get();
         }
         for (var i = 0; i < xs.length; i += 1) {
-            setPos(xs[i]);
+            zs[i] = setPos(xs[i]);
         }
-        return dom.element({name: 'div', contents: ys});
+        return dom.element({name: 'div', contents: zs});
     }
-    
+
+    function clone(o1) {
+        var o2 = {};
+        for (var k in o1) {
+            if (o1.hasOwnProperty(k)) {
+                o2[k] = o1[k];
+            }
+        }
+        return o2;
+    }
+
+    function setPosition(e1, pos) {
+        var e2 = clone(e1);
+        e2.style = e2.style ? dom.mixin(e2.style, pos) : pos;
+        return e2;
+    }
+
     // Set the horizontal position of a 2D element
     function setHPos(x) {
-        x.setPosition({
+        return setPosition(x, {
             cssFloat: 'left',
             clear: 'none'
         });
@@ -52,14 +69,14 @@ function onReady(dom, observable) {
     
     // Set the vertical position of a 2D element
     function setVPos(x) {
-        x.setPosition({
+        return setPosition(x, {
             cssFloat: 'left',
             clear: 'both'
         });
     }
 
     function setVPosRight(x) {
-        x.setPosition({
+        return setPosition(x, {
             cssFloat: 'right',
             clear: 'both'
         });
