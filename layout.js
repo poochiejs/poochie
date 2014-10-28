@@ -22,14 +22,14 @@ function onReady(dom, observable) {
     }
     
     // Concatenate elements
-    function cat(as, xs, setPos) {
+    function cat(as, xs, pos) {
         var ys = xs;
         var zs = {};
         if (ys instanceof observable.Observable) {
             xs = ys.get();
         }
         for (var i = 0; i < xs.length; i += 1) {
-            zs[i] = setPos(xs[i]);
+            zs[i] = setPosition(xs[i], pos);
         }
         return dom.element({name: 'div', contents: zs});
     }
@@ -50,46 +50,26 @@ function onReady(dom, observable) {
         return e2;
     }
 
-    // Set the horizontal position of a 2D element
-    function setHPos(x) {
-        return setPosition(x, {
-            cssFloat: 'left',
-            clear: 'none'
-        });
-    }
-
     // Concatenate elements horizontally
+    var hPos = {cssFloat: 'left', clear: 'none'};
     function hcat(as, xs) {
         if (as && as.constructor === Array) {
             xs = as;
             as = {};
         }
-        return cat(as, xs, setHPos);
-    }
-    
-    // Set the vertical position of a 2D element
-    function setVPos(x) {
-        return setPosition(x, {
-            cssFloat: 'left',
-            clear: 'both'
-        });
-    }
-
-    function setVPosRight(x) {
-        return setPosition(x, {
-            cssFloat: 'right',
-            clear: 'both'
-        });
+        return cat(as, xs, hPos);
     }
     
     // Concatenate elements vertically
+    var vPos = {cssFloat: 'left', clear: 'both'};
+    var vPosRight = {cssFloat: 'right', clear: 'both'};
     function vcat(as, xs) {
         if (as && as.constructor === Array) {
             xs = as;
             as = {};
         }
-        var setPos = as.align === 'right' ? setVPosRight : setVPos;
-        return cat(as, xs, setPos);
+        var pos = as.align === 'right' ? vPosRight : vPos;
+        return cat(as, xs, pos);
     }
     
     define({
