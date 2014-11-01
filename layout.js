@@ -24,7 +24,7 @@ function onReady(dom, observable) {
     // Concatenate elements
     function cat(as, xs, pos) {
         var ys = xs;
-        var zs = {};
+        var zs = [];
         if (ys instanceof observable.Observable) {
             xs = ys.get();
         }
@@ -35,7 +35,9 @@ function onReady(dom, observable) {
     }
 
     function clone(o1) {
-        var o2 = {};
+        function Clone() {}
+        Clone.prototype = o1;
+        var o2 = new Clone();
         for (var k in o1) {
             if (o1.hasOwnProperty(k)) {
                 o2[k] = o1[k];
