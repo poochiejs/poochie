@@ -154,8 +154,14 @@ function onReady(observable) {
     // Return the union of 'o1' and 'o2'.  When both contain the
     // same key, the value in 'o2' takes precedence.
     function mixin(o1, o2) {
-        var o3 = clone(o1);
-        for (var k in o2) {
+        var o3 = {};
+        var k;
+        for (k in o1) {
+            if (o1.hasOwnProperty(k)) {
+                o3[k] = o1[k];
+            }
+        }
+        for (k in o2) {
             if (o2.hasOwnProperty(k) && o2[k] !== undefined) {
                 o3[k] = o2[k];
             }
