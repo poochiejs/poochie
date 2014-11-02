@@ -23,7 +23,6 @@ function eq(actual, expected) {
 }
 
 define({
-    assertEq: eq,
     eq: eq
 });
 
