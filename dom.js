@@ -60,9 +60,6 @@ function onReady(observable) {
             e.setAttribute(k, v.get());
             var o = observable.subscriber([v], function(v) {e.setAttribute(k, v);});
             observables.push(o);
-            if (v.set) {
-                 e.addEventListener('change', function(evt) {v.set(evt.target[k]);});
-            }
         } else {
             e.setAttribute(k, v);
         }
