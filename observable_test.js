@@ -19,6 +19,9 @@ function onReady (observable, assert) {
     x.set(3);
     assert.eq(x.get(), 3);
 
+    // Test map() method
+    var rawInc = function(a) {return a + 1;};
+    assert.eq(x.map(rawInc).get(), 4);
 
     // Test subscriber
     var rawAdd = function(a,b) {return a + b;};
@@ -28,7 +31,7 @@ function onReady (observable, assert) {
 
     x.set(5);
     assert.eq(comp.get(), 11);
-    
+
     // Same as above, but using the lift() helper
     x.set(3);
     var add = observable.lift(rawAdd);
@@ -63,4 +66,4 @@ function onReady (observable, assert) {
 }
 
 require(deps, onReady);
-    
+

@@ -17,6 +17,11 @@ Observable.prototype.subscribe = function(f) {
     return this;
 };
 
+// o.map(f) is a shorthand for observable.subscriber([o], f)
+Observable.prototype.map = function(f) {
+    return subscriber([this], f);
+};
+
 // Observable values
 Publisher.prototype = new Observable();
 Publisher.prototype.constructor = Publisher;
