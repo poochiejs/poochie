@@ -20,12 +20,12 @@ function onReady (observable, assert) {
     assert.eq(x.get(), 3);
 
     // Test map() method
-    var rawInc = function(a) {return a + 1;};
-    assert.eq(x.map(rawInc).get(), 4);
+    var inc = function(a) {return a + 1;};
+    assert.eq(x.map(inc).get(), 4);
 
     // Test subscriber
-    var rawAdd = function(a,b) {return a + b;};
-    var comp = observable.subscriber([x, y], rawAdd);
+    var add = function(a,b) {return a + b;};
+    var comp = observable.subscriber([x, y], add);
     assert.eq(comp.set, undefined);
     assert.eq(comp.get(), 9);
 
@@ -34,17 +34,17 @@ function onReady (observable, assert) {
 
     // Same as above, but using the lift() helper
     x.set(3);
-    var add = observable.lift(rawAdd);
-    comp = add(x, y);
+    var oAdd = observable.lift(add);
+    comp = oAdd(x, y);
     assert.eq(comp.get(), 9);
 
     // As as above, but where a dependency is not an observable.
-    comp = add(x, 6);
+    comp = oAdd(x, 6);
     assert.eq(comp.get(), 9);
 
 
     // Multi-level compuation
-    comp = add(add(x, 5), 1);
+    comp = oAdd(oAdd(x, 5), 1);
     assert.eq(comp.get(), 9);
 
     x.set(5);
