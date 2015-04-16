@@ -20,16 +20,21 @@ function onReady(dom, observable) {
     function gap(n) {
         return dom.element({name: 'div', style: {width: n + 'px', height: n + 'px'}});
     }
-    
+
     // Concatenate elements
     function cat(as, xs, pos) {
-        var ys = xs;
-        var zs = [];
-        if (ys instanceof observable.Observable) {
-            xs = ys.get();
+        function setPositions(xs) {
+            var ys = [];
+            for (var i = 0; i < xs.length; i += 1) {
+                ys[i] = setPosition(xs[i], pos);
+            }
+            return ys;
         }
-        for (var i = 0; i < xs.length; i += 1) {
-            zs[i] = setPosition(xs[i], pos);
+        var zs;
+        if (xs instanceof observable.Observable) {
+            zs = xs.map(setPositions);
+        } else {
+            zs = setPositions(xs);
         }
         return dom.element({name: 'div', contents: zs});
     }
@@ -43,7 +48,7 @@ function onReady(dom, observable) {
     // Concatenate elements horizontally
     var hPos = {cssFloat: 'left', clear: 'none'};
     function hcat(as, xs) {
-        if (as && as.constructor === Array) {
+        if (as && (as instanceof Array || as instanceof observable.Observable)) {
             xs = as;
             as = {};
         }
@@ -54,7 +59,7 @@ function onReady(dom, observable) {
     var vPos = {cssFloat: 'left', clear: 'both'};
     var vPosRight = {cssFloat: 'right', clear: 'both'};
     function vcat(as, xs) {
-        if (as && as.constructor === Array) {
+        if (as && (as instanceof Array || as instanceof observable.Observable)) {
             xs = as;
             as = {};
         }

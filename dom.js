@@ -66,9 +66,8 @@ function onReady(observable) {
     }
 
     function mkSetChildren(e) {
-        return function (obs) {
+        return function (xs) {
             e.innerHTML = '';
-            var xs = obs.get();
             for (var i = 0; i < xs.length; i++) {
                 var x = xs[i];
                 x = typeof x === 'string' ? document.createTextNode(x) : x;
@@ -129,7 +128,7 @@ function onReady(observable) {
                 if (xs instanceof observable.Observable) {
                     var xsObs = xs;
                     xs = xsObs.get();
-                    var o = observable.subscriber(xsObs, mkSetChildren(e));
+                    var o = xsObs.map(mkSetChildren(e));
                     observables.push(o);
                 }
 
