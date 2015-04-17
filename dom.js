@@ -47,21 +47,35 @@ function onReady(observable) {
     function addStyle(e, observables, style, s) {
         if (style[s] instanceof observable.Observable) {
             e.style[s] = style[s].get();
-            var o = observable.subscriber([style[s]], function(v) {e.style[s] = v;});
+            var o = style[s].map(function(v) {e.style[s] = v;});
             observables.push(o);
         } else {
             e.style[s] = style[s];
         }
     }
 
-    // Add attribute 'k' with value 'v' to the DOM element 'e'.
+    // Add attribute 'k' with value 'v' to the DOM element 'e'.   If the
+    // attribute's value is 'undefined', it will be ignored.  If the
+    // attribute's value is an observable, then any time its value is
+    // 'undefined', the attribute will be removed.
     function addAttribute(e, observables, k, v) {
         if (v instanceof observable.Observable) {
-            e.setAttribute(k, v.get());
-            var o = observable.subscriber([v], function(v) {e.setAttribute(k, v);});
+            var val = v.get();
+            if (val !== undefined) {
+                e.setAttribute(k, val);
+            }
+            var o = v.map(function(v) {
+                if (v !== undefined) {
+                    e.setAttribute(k, v);
+                } else {
+                    e.removeAttribute(k);
+                }
+            });
             observables.push(o);
         } else {
-            e.setAttribute(k, v);
+            if (v !== undefined) {
+                e.setAttribute(k, v);
+            }
         }
     }
 
