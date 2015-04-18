@@ -79,24 +79,22 @@ function onReady(observable) {
         }
     }
 
-    function mkSetChildren(observables, e) {
-        return function (xs) {
-            e.innerHTML = '';
-            for (var i = 0; i < xs.length; i++) {
-                var x = xs[i];
-                x = typeof x === 'string' ? document.createTextNode(x) : x;
-                if (typeof x.render === 'function') {
-                    x = x.render();
-                    if (typeof x.get === 'function') {
-                        if (observables.indexOf(x) === -1) {
-                            observables.push(x);
-                        }
-                        x = x.get();
+    function setChildren(observables, e, xs) {
+        e.innerHTML = '';
+        for (var i = 0; i < xs.length; i++) {
+            var x = xs[i];
+            x = typeof x === 'string' ? document.createTextNode(x) : x;
+            if (typeof x.render === 'function') {
+                x = x.render();
+                if (typeof x.get === 'function') {
+                    if (observables.indexOf(x) === -1) {
+                        observables.push(x);
                     }
+                    x = x.get();
                 }
-                e.appendChild(x);
             }
-        };
+            e.appendChild(x);
+        }
     }
 
 
@@ -143,22 +141,12 @@ function onReady(observable) {
                 if (xs instanceof observable.Observable) {
                     var xsObs = xs;
                     xs = xsObs.get();
-                    var o = xsObs.map(mkSetChildren(observables, e));
+                    var o = xsObs.map(function(xs){
+                        setChildren(observables, e, xs);
+                    });
                     observables.push(o);
                 }
-
-                for (var i = 0; i < xs.length; i++) {
-                    var x = xs[i];
-                    x = typeof x === 'string' ? document.createTextNode(x) : x;
-                    if (typeof x.render === 'function') {
-                       x = x.render();
-                       if (typeof x.get === 'function') {
-                          observables.push(x);
-                          x = x.get();
-                       }
-                    }
-                    e.appendChild(x);
-                }
+                setChildren(observables, e, xs);
             }
         }
 

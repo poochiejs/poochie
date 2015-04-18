@@ -61,18 +61,23 @@ function Subscriber(args, f) {
     args.forEach(function(o) {
         if (o instanceof Observable) {
             o.subscribe(function (obs) {
-                if (me.valid) {
-                    me.valid = false;
-                    if (me.subscribers) {
-                        me.subscribers.forEach(function(f) {
-                            f(me);
-                        });
-                    }
-                }
+                me.invalidate();
             });
         }
     });
 }
+
+Subscriber.prototype.invalidate = function() {
+    if (this.valid) {
+        this.valid = false;
+        if (this.subscribers) {
+            for (var i = 0; i < this.subscribers.length; i++) {
+                var f = this.subscribers[i];
+                f(this);
+            }
+        }
+    }
+};
 
 Subscriber.prototype.get = function() {
    if (this.valid) {
