@@ -44,11 +44,11 @@ var deps = [
 function onReady(observable) {
 
     // Add style 's' with value 'style[s]' to the DOM element 'e'.
-    function addStyle(e, observables, style, s) {
+    function addStyle(e, subscriber, style, s) {
         if (style[s] instanceof observable.Observable) {
             e.style[s] = style[s].get();
             var o = style[s].map(function(v) {e.style[s] = v;});
-            observables.push(o);
+            subscriber.addArg(o);
         } else {
             e.style[s] = style[s];
         }
@@ -58,7 +58,7 @@ function onReady(observable) {
     // attribute's value is 'undefined', it will be ignored.  If the
     // attribute's value is an observable, then any time its value is
     // 'undefined', the attribute will be removed.
-    function addAttribute(e, observables, k, v) {
+    function addAttribute(e, subscriber, k, v) {
         if (v instanceof observable.Observable) {
             var val = v.get();
             if (val !== undefined) {
@@ -71,7 +71,7 @@ function onReady(observable) {
                     e.removeAttribute(k);
                 }
             });
-            observables.push(o);
+            subscriber.addArg(o);
         } else {
             if (v !== undefined) {
                 e.setAttribute(k, v);
@@ -79,7 +79,7 @@ function onReady(observable) {
         }
     }
 
-    function setChildren(observables, e, xs) {
+    function setChildren(subscriber, e, xs) {
         e.innerHTML = '';
         for (var i = 0; i < xs.length; i++) {
             var x = xs[i];
@@ -87,8 +87,8 @@ function onReady(observable) {
             if (typeof x.render === 'function') {
                 x = x.render();
                 if (typeof x.get === 'function') {
-                    if (observables.indexOf(x) === -1) {
-                        observables.push(x);
+                    if (subscriber.args.indexOf(x) === -1) {
+                        subscriber.addArg(x);
                     }
                     x = x.get();
                 }
@@ -102,8 +102,6 @@ function onReady(observable) {
     // an array of subelements 'xs', and an object of event handlers 'es'.
     function createElement(ps) {
 
-        var observables = [];
-
         if (typeof ps === 'string') {
             ps = {name: ps};
         }
@@ -111,13 +109,16 @@ function onReady(observable) {
         // Create DOM node
         var e = document.createElement(ps.name);
 
+        // Create a subscriber to watch any observables.
+        var subscriber = observable.subscriber([], function(){return e;});
+
         // Add attributes
         var as = ps.attributes;
         var k;
         if (as) {
             for (k in as) {
                 if (as.hasOwnProperty(k) && k !== 'style' && as[k] !== undefined) {
-                    addAttribute(e, observables, k, as[k]);
+                    addAttribute(e, subscriber, k, as[k]);
                 }
             }
         }
@@ -127,7 +128,7 @@ function onReady(observable) {
         if (style) {
             for (var s in style) {
                 if (style.hasOwnProperty(s) && style[s] !== undefined) {
-                    addStyle(e, observables, style, s);
+                    addStyle(e, subscriber, style, s);
                 }
             }
         }
@@ -142,11 +143,11 @@ function onReady(observable) {
                     var xsObs = xs;
                     xs = xsObs.get();
                     var o = xsObs.map(function(xs){
-                        setChildren(observables, e, xs);
+                        setChildren(subscriber, e, xs);
                     });
-                    observables.push(o);
+                    subscriber.addArg(o);
                 }
-                setChildren(observables, e, xs);
+                setChildren(subscriber, e, xs);
             }
         }
 
@@ -160,8 +161,8 @@ function onReady(observable) {
             }
         }
 
-        if (observables.length > 0) {
-            return observable.subscriber(observables, function(){return e;});
+        if (subscriber.args.length > 0) {
+            return subscriber;
         }
 
         return e;

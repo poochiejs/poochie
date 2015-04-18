@@ -67,6 +67,14 @@ function Subscriber(args, f) {
     });
 }
 
+Subscriber.prototype.addArg = function(o) {
+    this.args.push(o);
+    var me = this;
+    o.subscribe(function (obs) {
+        me.invalidate();
+    });
+};
+
 Subscriber.prototype.invalidate = function() {
     if (this.valid) {
         this.valid = false;
