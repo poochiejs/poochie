@@ -21,6 +21,7 @@
 //
 
 
+var document = require('global/document');
 var observable = require('./observable');
 
 // Add style 's' with value 'style[s]' to the DOM element 'e'.
