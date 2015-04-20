@@ -151,7 +151,7 @@ function publisher(v) {
     return new Publisher(v);
 }
 
-define({
+module.exports = {
     Observable: Observable,
     Publisher: Publisher,
     publisher: publisher,
@@ -163,5 +163,5 @@ define({
     // deprecated aliases
     observe: publisher,
     thunk: subscriber
-});
+};
 
