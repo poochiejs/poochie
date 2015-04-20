@@ -3,5 +3,6 @@
   "version": "0.1.0",
   "description": "Yoink reactive library",
   "scripts": { "test": "node test.js" },
+  "dependencies": { "global": ">=4.3.0" },
   "devDependencies": { "test": ">=0.0.5" }
 }
