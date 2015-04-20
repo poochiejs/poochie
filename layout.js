@@ -2,8 +2,8 @@
 // A JavaScript library for 2D layout
 //
 
-var dom = require('dom');
-var observable = require('observable');
+var dom = require('./dom');
+var observable = require('./observable');
 
 // gap(n)
 //

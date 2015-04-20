@@ -2,11 +2,11 @@
 // Interface tests
 //
 
-var layout = require('layout');
+var layout = require('./layout');
 var assert = require('assert');
-var dom = require('dom');
+var dom = require('./dom');
 
-var eq = assert.eq;
+var eq = assert.deepEqual;
 var gap = layout.gap;
 var hcat = layout.hcat;
 var vcat = layout.vcat;

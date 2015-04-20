@@ -1,0 +1,7 @@
+{
+  "name": "yoinkjs",
+  "version": "0.1.0",
+  "description": "Yoink reactive library",
+  "scripts": { "test": "node test.js" },
+  "devDependencies": { "test": ">=0.0.5" }
+}

@@ -21,7 +21,7 @@
 //
 
 
-var observable = require('observable');
+var observable = require('./observable');
 
 // Add style 's' with value 'style[s]' to the DOM element 'e'.
 function addStyle(e, subscriber, style, s) {
