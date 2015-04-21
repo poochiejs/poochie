@@ -3,6 +3,7 @@
 //
 
 var dom = require('./dom');
+var object = require('./object');
 var observable = require('./observable');
 
 // gap(n)
@@ -31,8 +32,8 @@ function cat(as, xs, pos) {
 }
 
 function setPosition(e1, pos) {
-    var e2 = dom.clone(e1);
-    e2.style = e2.style ? dom.mixin(e2.style, pos) : pos;
+    var e2 = object.clone(e1);
+    e2.style = e2.style ? object.mixin(e2.style, pos) : pos;
     return e2;
 }
 
