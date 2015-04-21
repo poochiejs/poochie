@@ -126,10 +126,10 @@ function lift(f) {
 // Handy function to capture the current state of an object containing observables
 function snapshot(o) {
     if (typeof o === 'object') {
-        if (o.get && o.subscribe) {
+        if (o instanceof Observable) {
             return snapshot( o.get() );
         } else {
-            if (o.constructor === Array) {
+            if (o instanceof Array) {
                 return o.map(snapshot);
             } else {
                 var o2 = {};
