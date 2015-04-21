@@ -183,7 +183,7 @@ function cascadeStyles(xs) {
 //
 // element({name, attributes, style, contents, handlers})
 //
-function Element(as) {
+function ReactiveElement(as) {
 
     if (typeof as === 'string') {
         as = {name: as};
@@ -197,20 +197,20 @@ function Element(as) {
     if (as.handlers   !== undefined) { this.handlers   = as.handlers; }
 }
 
-Element.prototype.render = function() {
+ReactiveElement.prototype.render = function() {
      return createElement(this);
 };
 
 function element(as) {
-    return new Element(as);
+    return new ReactiveElement(as);
 }
 
 module.exports = {
-    createElement: createElement,
-    clone:         clone,
-    mixin:         mixin,
-    cascadeStyles: cascadeStyles,
-    Element:       Element,
-    element:       element
+    createElement:   createElement,
+    clone:           clone,
+    mixin:           mixin,
+    cascadeStyles:   cascadeStyles,
+    ReactiveElement: ReactiveElement,
+    element:         element
 };
 

@@ -35,8 +35,8 @@ var div = hcat([g1, g2]);
 g1 = div.contents[0];
 g2 = div.contents[1];
 
-// g1 is an Element
-eq(g1 instanceof dom.Element, true);
+// g1 is a ReactiveElement
+eq(g1 instanceof dom.ReactiveElement, true);
 
 eq(g1.style.cssFloat, 'left');
 eq(g1.style.clear, 'none');
