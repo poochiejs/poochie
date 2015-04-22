@@ -174,9 +174,29 @@ function element(as) {
     return new ReactiveElement(as);
 }
 
+// Render a ReactiveElement.  If it contains observables, poll it
+// for updates.
+function render(e) {
+    var nd = e;
+    if (typeof e === 'string') {
+        nd = document.createTextNode(e);
+    } else if (typeof e.render === 'function') {
+        nd = e.render();
+    }
+
+    if (nd instanceof observable.Observable) {
+        var obs = nd;
+        setInterval(function(){obs.get();}, 30);
+        nd = obs.get();
+    }
+
+    return nd;
+}
+
 module.exports = {
     createElement:   createElement,
     ReactiveElement: ReactiveElement,
-    element:         element
+    element:         element,
+    render:          render
 };
 
