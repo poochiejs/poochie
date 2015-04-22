@@ -3,6 +3,8 @@ Poochie
 
 Poochie is one outrageous microframework.
 
+[![Build Status](https://travis-ci.org/garious/poochie.svg)](https://travis-ci.org/garious/poochie)
+
 
 Introduction
 ---
