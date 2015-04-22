@@ -67,12 +67,6 @@ function setChildren(subscriber, e, xs) {
         x = typeof x === 'string' ? document.createTextNode(x) : x;
         if (typeof x.render === 'function') {
             x = x.render();
-            if (typeof x.get === 'function') {
-                if (subscriber.args.indexOf(x) === -1) {
-                    subscriber.addArg(x);
-                }
-                x = x.get();
-            }
         }
         e.appendChild(x);
     }
@@ -143,7 +137,7 @@ function createElement(ps) {
     }
 
     if (subscriber.args.length > 0) {
-        return subscriber;
+        setInterval(function(){subscriber.get();}, 30);
     }
 
     return e;
@@ -174,23 +168,12 @@ function element(as) {
     return new ReactiveElement(as);
 }
 
-// Render a ReactiveElement.  If it contains observables, poll it
-// for updates.
+// Render a string or object with a render method, such as a ReactiveElement.
 function render(e) {
-    var nd = e;
     if (typeof e === 'string') {
-        nd = document.createTextNode(e);
-    } else if (typeof e.render === 'function') {
-        nd = e.render();
+        return document.createTextNode(e);
     }
-
-    if (nd instanceof observable.Observable) {
-        var obs = nd;
-        setInterval(function(){obs.get();}, 30);
-        nd = obs.get();
-    }
-
-    return nd;
+    return e.render();
 }
 
 module.exports = {
