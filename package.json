@@ -1,9 +1,9 @@
 {
-  "name": "yoinkjs",
+  "name": "venus",
   "version": "0.1.0",
-  "description": "Yoink reactive library",
+  "description": "Reactive frontend library",
   "repository": {
-    "url": "git@github.com:garious/yoinkjs.git",
+    "url": "git@github.com:garious/venus.git",
     "type": "git"
   },
   "scripts": { "test": "node test.js" },
