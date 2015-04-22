@@ -1,4 +1,4 @@
-Venus, a truly lean frontend framework
+Venus
 ===
 
 It's like Mercury.js, but a little closer to home.
