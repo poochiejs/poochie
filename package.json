@@ -1,9 +1,9 @@
 {
-  "name": "venus",
+  "name": "poochie",
   "version": "0.1.0",
   "description": "Reactive frontend library",
   "repository": {
-    "url": "git@github.com:garious/venus.git",
+    "url": "git@github.com:garious/poochie.git",
     "type": "git"
   },
   "scripts": { "test": "node test.js" },
