@@ -20,7 +20,7 @@ var inc = function(a) {return a + 1;};
 assert.equal(x.map(inc).get(), 4);
 
 // Test subscriber
-var add = function(a,b) {return a + b;};
+var add = function(a, b) {return a + b;};
 var comp = observable.subscriber([x, y], add);
 assert.equal(comp.set, undefined);
 assert.equal(comp.get(), 9);
@@ -37,7 +37,6 @@ assert.equal(comp.get(), 9);
 // As as above, but where a dependency is not an observable.
 comp = oAdd(x, 6);
 assert.equal(comp.get(), 9);
-
 
 // Multi-level compuation
 comp = oAdd(oAdd(x, 5), 1);

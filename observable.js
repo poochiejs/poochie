@@ -45,7 +45,6 @@ Publisher.prototype.get = function() {
     return this.value;
 };
 
-
 // Observable computations.  subscriber() takes a list of observables
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
@@ -60,7 +59,7 @@ function Subscriber(args, f) {
     var me = this;  // Avoid 'this' ambiguity.
     args.forEach(function(o) {
         if (o instanceof Observable) {
-            o.subscribe(function (obs) {
+            o.subscribe(function(obs) {
                 me.invalidate();
             });
         }
@@ -70,7 +69,7 @@ function Subscriber(args, f) {
 Subscriber.prototype.addArg = function(o) {
     this.args.push(o);
     var me = this;
-    o.subscribe(function (obs) {
+    o.subscribe(function(obs) {
         me.invalidate();
     });
 };
@@ -88,26 +87,26 @@ Subscriber.prototype.invalidate = function() {
 };
 
 Subscriber.prototype.get = function() {
-   if (this.valid) {
-     return this.value;
-   } else {
-     var vals = this.args.map(function(o){
+    if (this.valid) {
+        return this.value;
+    } else {
+        var vals = this.args.map(function(o) {
          return o instanceof Observable ? o.get() : o;
      });
 
-     var oldValue = this.value;
-     this.value = this.f.apply(null, vals);
-     this.valid = true;
+        var oldValue = this.value;
+        this.value = this.f.apply(null, vals);
+        this.valid = true;
 
-     if (this.value !== oldValue && this.subscribers) {
-         var me = this;
-         this.subscribers.forEach(function(f) {
+        if (this.value !== oldValue && this.subscribers) {
+            var me = this;
+            this.subscribers.forEach(function(f) {
              f(me);
          });
-     }
+        }
 
-     return this.value;
-   }
+        return this.value;
+    }
 };
 
 function subscriber(args, f) {
@@ -117,17 +116,16 @@ function subscriber(args, f) {
 // Handy function to lift a raw function into the observable realm
 function lift(f) {
     return function() {
-       var args = Array.prototype.slice.call(arguments);
-       return subscriber(args, f);
+        var args = Array.prototype.slice.call(arguments);
+        return subscriber(args, f);
     };
 }
-
 
 // Handy function to capture the current state of an object containing observables
 function snapshot(o) {
     if (typeof o === 'object') {
         if (o instanceof Observable) {
-            return snapshot( o.get() );
+            return snapshot(o.get());
         } else {
             if (o instanceof Array) {
                 return o.map(snapshot);

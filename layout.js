@@ -10,7 +10,10 @@ var observable = require('./observable');
 //
 //     Create empty space of 'n' pixels wide and 'n' pixels tall.
 function gap(n) {
-    return dom.element({name: 'div', style: {width: n + 'px', height: n + 'px'}});
+    return dom.element({
+        name: 'div',
+        style: {width: n + 'px', height: n + 'px'}
+    });
 }
 
 // Concatenate elements

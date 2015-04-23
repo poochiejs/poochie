@@ -17,7 +17,6 @@ var vcat = layout.vcat;
 
 eq(gap(2).style,   {width: '2px', height: '2px'});
 
-
 //
 // hcat
 //
@@ -42,7 +41,6 @@ eq(g1.style.cssFloat, 'left');
 eq(g1.style.clear, 'none');
 eq(g2.style.cssFloat, 'left');
 eq(g2.style.clear, 'none');
-
 
 //
 // vcat

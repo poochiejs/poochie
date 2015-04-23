@@ -20,7 +20,6 @@
 //     such as Node.js will suffice.
 //
 
-
 var document = require('global/document');
 var observable = require('./observable');
 
@@ -72,7 +71,6 @@ function setChildren(subscriber, e, xs) {
     }
 }
 
-
 // Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty',
 // an array of subelements 'xs', and an object of event handlers 'es'.
 function createElement(ps) {
@@ -85,7 +83,7 @@ function createElement(ps) {
     var e = document.createElement(ps.name);
 
     // Create a subscriber to watch any observables.
-    var subscriber = observable.subscriber([], function(){return e;});
+    var subscriber = observable.subscriber([], function() {return e;});
 
     // Add attributes
     var as = ps.attributes;
@@ -117,7 +115,7 @@ function createElement(ps) {
             if (xs instanceof observable.Observable) {
                 var xsObs = xs;
                 xs = xsObs.get();
-                var o = xsObs.map(function(xs){
+                var o = xsObs.map(function(xs) {
                     setChildren(subscriber, e, xs);
                 });
                 subscriber.addArg(o);
@@ -137,7 +135,7 @@ function createElement(ps) {
     }
 
     if (subscriber.args.length > 0) {
-        setInterval(function(){subscriber.get();}, 30);
+        setInterval(function() {subscriber.get();}, 30);
     }
 
     return e;
@@ -161,7 +159,7 @@ function ReactiveElement(as) {
 }
 
 ReactiveElement.prototype.render = function() {
-     return createElement(this);
+    return createElement(this);
 };
 
 function element(as) {
