@@ -6,7 +6,7 @@
     "url": "git@github.com:garious/poochie.git",
     "type": "git"
   },
-  "scripts": { "test": "node *_test.js" },
+  "scripts": { "test": "node test.js" },
   "dependencies": { "global": ">=4.3.0" },
   "devDependencies": { "test": ">=0.0.5" }
 }
