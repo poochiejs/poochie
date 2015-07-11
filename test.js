@@ -2,6 +2,8 @@
 // Discover unit tests, run them and log their output.
 //
 
+'use strict';
+
 var fs = require('fs');
 
 function endsWith(str, suffix) {

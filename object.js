@@ -4,6 +4,8 @@
 //     object
 //
 
+'use strict';
+
 // Return a clone of the input object using prototype inheritance.
 function Clone() {}
 function clone(o) {

@@ -2,6 +2,8 @@
 // Tests!
 //
 
+'use strict';
+
 var dom = require('./dom');
 var assert = require('assert');
 

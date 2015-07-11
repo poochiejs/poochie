@@ -20,6 +20,8 @@
 //     such as Node.js will suffice.
 //
 
+'use strict';
+
 var document = require('global/document');
 var observable = require('./observable');
 

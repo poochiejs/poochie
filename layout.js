@@ -2,6 +2,8 @@
 // A JavaScript library for 2D layout
 //
 
+'use strict';
+
 var dom = require('./dom');
 var object = require('./object');
 var observable = require('./observable');

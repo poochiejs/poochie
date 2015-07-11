@@ -2,6 +2,8 @@
 // Observable JS
 //
 
+'use strict';
+
 // Publishers and Subscribers share the Observable
 // interface, which includes a get() and subscribe()
 // function.
