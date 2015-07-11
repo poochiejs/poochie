@@ -18,11 +18,11 @@ x.set(3);
 assert.equal(x.get(), 3);
 
 // Test map() method
-var inc = function(a) {return a + 1;};
+function inc(a) { return a + 1; }
 assert.equal(x.map(inc).get(), 4);
 
 // Test subscriber
-var add = function(a, b) {return a + b;};
+function add(a, b) { return a + b; }
 var comp = observable.subscriber([x, y], add);
 assert.equal(comp.set, undefined);
 assert.equal(comp.get(), 9);

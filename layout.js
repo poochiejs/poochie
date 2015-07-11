@@ -26,20 +26,20 @@ function setPosition(e1, pos) {
 
 // Concatenate elements
 function cat(as, xs, pos) {
-    function setPositions(xs) {
-        var ys = [];
-        for (var i = 0; i < xs.length; i += 1) {
-            ys[i] = setPosition(xs[i], pos);
+    function setPositions(xs2) {
+        var xs3 = [];
+        for (var i = 0; i < xs2.length; i += 1) {
+            xs3[i] = setPosition(xs2[i], pos);
         }
-        return ys;
+        return xs3;
     }
-    var zs;
+    var ys;
     if (xs instanceof observable.Observable) {
-        zs = xs.map(setPositions);
+        ys = xs.map(setPositions);
     } else {
-        zs = setPositions(xs);
+        ys = setPositions(xs);
     }
-    return dom.element({name: 'div', contents: zs});
+    return dom.element({name: 'div', contents: ys});
 }
 
 // Concatenate elements horizontally

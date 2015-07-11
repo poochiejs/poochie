@@ -15,7 +15,7 @@ var vcat = layout.vcat;
 // gap
 //
 
-eq(gap(2).style,   {width: '2px', height: '2px'});
+eq(gap(2).style, {width: '2px', height: '2px'});
 
 //
 // hcat

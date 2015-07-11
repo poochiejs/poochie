@@ -56,7 +56,7 @@ To download this package's dependencies:
 $ npm install
 ```
 
-To run the unit tests:
+To lint the code and run the unit tests:
 
 ```bash
 $ npm test

@@ -29,7 +29,7 @@ var observable = require('./observable');
 function addStyle(e, subscriber, style, s) {
     if (style[s] instanceof observable.Observable) {
         e.style[s] = style[s].get();
-        var o = style[s].map(function(v) {e.style[s] = v;});
+        var o = style[s].map(function(v) { e.style[s] = v; });
         subscriber.addArg(o);
     } else {
         e.style[s] = style[s];
@@ -46,9 +46,9 @@ function addAttribute(e, subscriber, k, v) {
         if (val !== undefined) {
             e.setAttribute(k, val);
         }
-        var o = v.map(function(v) {
-            if (v !== undefined) {
-                e.setAttribute(k, v);
+        var o = v.map(function(v2) {
+            if (v2 !== undefined) {
+                e.setAttribute(k, v2);
             } else {
                 e.removeAttribute(k);
             }
@@ -85,7 +85,7 @@ function createElement(ps) {
     var e = document.createElement(ps.name);
 
     // Create a subscriber to watch any observables.
-    var subscriber = observable.subscriber([], function() {return e;});
+    var subscriber = observable.subscriber([], function() { return e; });
 
     // Add attributes
     var as = ps.attributes;
@@ -117,8 +117,8 @@ function createElement(ps) {
             if (xs instanceof observable.Observable) {
                 var xsObs = xs;
                 xs = xsObs.get();
-                var o = xsObs.map(function(xs) {
-                    setChildren(subscriber, e, xs);
+                var o = xsObs.map(function(ys) {
+                    setChildren(subscriber, e, ys);
                 });
                 subscriber.addArg(o);
             }
@@ -137,7 +137,7 @@ function createElement(ps) {
     }
 
     if (subscriber.args.length > 0) {
-        setInterval(function() {subscriber.get();}, 30);
+        setInterval(function() { subscriber.get(); }, 30);
     }
 
     return e;
