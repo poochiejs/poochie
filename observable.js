@@ -17,18 +17,13 @@ Observable.prototype.subscribe = function(f) {
     return this;
 };
 
-// o.map(f) is a shorthand for observable.subscriber([o], f)
-Observable.prototype.map = function(f) {
-    return subscriber([this], f);
-};
+function Publisher(v) {
+    this.value = v;
+}
 
 // Observable values
 Publisher.prototype = new Observable();
 Publisher.prototype.constructor = Publisher;
-
-function Publisher(v) {
-    this.value = v;
-}
 
 Publisher.prototype.set = function(v) {
     this.value = v;
@@ -49,8 +44,6 @@ Publisher.prototype.get = function() {
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
-Subscriber.prototype = new Observable();
-Subscriber.prototype.constructor = Subscriber;
 function Subscriber(args, f) {
     this.valid = false;
     this.f = f;
@@ -59,17 +52,20 @@ function Subscriber(args, f) {
     var me = this;  // Avoid 'this' ambiguity.
     args.forEach(function(o) {
         if (o instanceof Observable) {
-            o.subscribe(function(obs) {
+            o.subscribe(function() {
                 me.invalidate();
             });
         }
     });
 }
 
+Subscriber.prototype = new Observable();
+Subscriber.prototype.constructor = Subscriber;
+
 Subscriber.prototype.addArg = function(o) {
     this.args.push(o);
     var me = this;
-    o.subscribe(function(obs) {
+    o.subscribe(function() {
         me.invalidate();
     });
 };
@@ -112,6 +108,11 @@ Subscriber.prototype.get = function() {
 function subscriber(args, f) {
     return new Subscriber(args, f);
 }
+
+// o.map(f) is a shorthand for observable.subscriber([o], f)
+Observable.prototype.map = function(f) {
+    return subscriber([this], f);
+};
 
 // Handy function to lift a raw function into the observable realm
 function lift(f) {
@@ -162,4 +163,3 @@ module.exports = {
     observe: publisher,
     thunk: subscriber
 };
-

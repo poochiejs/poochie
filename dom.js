@@ -152,10 +152,21 @@ function ReactiveElement(as) {
 
     this.name = as.name;
 
-    if (as.attributes !== undefined) { this.attributes = as.attributes; }
-    if (as.style      !== undefined) { this.style      = as.style; }
-    if (as.contents   !== undefined) { this.contents   = as.contents; }
-    if (as.handlers   !== undefined) { this.handlers   = as.handlers; }
+    if (as.attributes !== undefined) {
+        this.attributes = as.attributes;
+    }
+
+    if (as.style !== undefined) {
+        this.style = as.style;
+    }
+
+    if (as.contents !== undefined) {
+        this.contents = as.contents;
+    }
+
+    if (as.handlers !== undefined) {
+        this.handlers = as.handlers;
+    }
 }
 
 ReactiveElement.prototype.render = function() {
@@ -175,9 +186,8 @@ function render(e) {
 }
 
 module.exports = {
-    createElement:   createElement,
+    createElement: createElement,
     ReactiveElement: ReactiveElement,
-    element:         element,
-    render:          render
+    element: element,
+    render: render
 };
-

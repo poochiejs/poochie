@@ -16,6 +16,12 @@ function gap(n) {
     });
 }
 
+function setPosition(e1, pos) {
+    var e2 = object.clone(e1);
+    e2.style = e2.style ? object.mixin(e2.style, pos) : pos;
+    return e2;
+}
+
 // Concatenate elements
 function cat(as, xs, pos) {
     function setPositions(xs) {
@@ -32,12 +38,6 @@ function cat(as, xs, pos) {
         zs = setPositions(xs);
     }
     return dom.element({name: 'div', contents: zs});
-}
-
-function setPosition(e1, pos) {
-    var e2 = object.clone(e1);
-    e2.style = e2.style ? object.mixin(e2.style, pos) : pos;
-    return e2;
 }
 
 // Concatenate elements horizontally
@@ -67,4 +67,3 @@ module.exports = {
     vcat: vcat,
     gap: gap
 };
-

@@ -38,6 +38,5 @@ function cascade(xs) {
 module.exports = {
     clone: clone,
     mixin: mixin,
-    cascade: cascade,
+    cascade: cascade
 };
-
