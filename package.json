@@ -2,6 +2,7 @@
   "name": "poochie",
   "version": "0.1.0",
   "description": "Reactive frontend library",
+  "license": "BSD-3-Clause",
   "repository": {
     "url": "git@github.com:garious/poochie.git",
     "type": "git"
