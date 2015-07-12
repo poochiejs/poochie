@@ -5,6 +5,7 @@
 var layout = require('./layout');
 var assert = require('assert');
 var dom = require('./dom');
+var observable = require('./observable');
 
 var eq = assert.deepEqual;
 var gap = layout.gap;
@@ -67,5 +68,10 @@ eq(g1.style.cssFloat, 'right');
 eq(g1.style.clear, 'both');
 eq(g2.style.cssFloat, 'right');
 eq(g2.style.clear, 'both');
+
+// vcat also accepts observable lists of elements.
+div = vcat({}, observable.publisher([g1, g2]));
+g1 = div.contents.get()[0];
+eq(g1.style.clear, 'both');
 
 module.exports = 'passed!';
