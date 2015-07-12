@@ -159,9 +159,5 @@ module.exports = {
     Subscriber: Subscriber,
     subscriber: subscriber,
     lift: lift,
-    snapshot: snapshot,
-
-    // deprecated aliases
-    observe: publisher,
-    thunk: subscriber
+    snapshot: snapshot
 };
