@@ -6,6 +6,6 @@ node_js:
 sudo: false
 addons:
   code_climate:
-    repo_token: 55a1baca6956804d380052d2
+    repo_token: efb7522eec30499991fe74d59051679a9ae2b5caf53fbb004b62ea83825cdc56
 after_success:
   - node_modules/.bin/codeclimate-test-reporter  < coverage/lcov.info
