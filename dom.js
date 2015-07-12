@@ -75,11 +75,7 @@ function setChildren(subscriber, e, xs) {
 
 // Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty',
 // an array of subelements 'xs', and an object of event handlers 'es'.
-function createElement(ps) {
-
-    if (typeof ps === 'string') {
-        ps = {name: ps};
-    }
+function createElementAndSubscriber(ps) {
 
     // Create DOM node
     var e = document.createElement(ps.name);
@@ -135,12 +131,24 @@ function createElement(ps) {
             }
         }
     }
+    return {
+        element: e,
+        subscriber: subscriber
+    };
+}
 
-    if (subscriber.args.length > 0) {
-        setInterval(function() { subscriber.get(); }, 30);
+function createElement(ps) {
+    if (typeof ps === 'string') {
+        ps = {name: ps};
     }
 
-    return e;
+    var obj = createElementAndSubscriber(ps);
+
+    if (obj.subscriber.args.length > 0) {
+        setInterval(function() { obj.subscriber.get(); }, 30);
+    }
+
+    return obj.element;
 }
 
 //
@@ -189,6 +197,7 @@ function render(e) {
 
 module.exports = {
     createElement: createElement,
+    createElementAndSubscriber: createElementAndSubscriber,
     ReactiveElement: ReactiveElement,
     element: element,
     render: render
