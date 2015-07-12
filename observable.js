@@ -89,8 +89,8 @@ Subscriber.prototype.get = function() {
         return this.value;
     } else {
         var vals = this.args.map(function(o) {
-         return o instanceof Observable ? o.get() : o;
-     });
+            return o instanceof Observable ? o.get() : o;
+        });
 
         var oldValue = this.value;
         this.value = this.f.apply(null, vals);
@@ -99,8 +99,8 @@ Subscriber.prototype.get = function() {
         if (this.value !== oldValue && this.subscribers) {
             var me = this;
             this.subscribers.forEach(function(f) {
-             f(me);
-         });
+                f(me);
+            });
         }
 
         return this.value;
