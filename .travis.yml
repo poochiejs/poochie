@@ -4,3 +4,8 @@ node_js:
   - "0.11"
   - "0.10"
 sudo: false
+addons:
+  code_climate:
+    repo_token: 55a1baca6956804d380052d2
+after_success:
+  - node_modules/.bin/codeclimate-test-reporter  < coverage/lcov.info
