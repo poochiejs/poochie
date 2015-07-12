@@ -7,9 +7,17 @@
     "url": "git@github.com:garious/poochie.git",
     "type": "git"
   },
-  "scripts": { "test": "eslint *.js && node test.js" },
-  "dependencies": { "global": ">=4.3.0" },
-  "devDependencies": { "test": ">=0.0.5", "eslint": ">=0.24.1" },
+  "scripts": {
+    "test": "eslint *.js && istanbul cover -x '*test.js' test.js"
+  },
+  "dependencies": {
+    "global": ">=4.3.0"
+  },
+  "devDependencies": {
+    "eslint": ">=0.24.1",
+    "istanbul": ">=0.3.17",
+    "test": ">=0.0.5"
+  },
   "eslintConfig": {
     "rules": {
       "quotes": [2, "single"]
