@@ -5,6 +5,7 @@ Poochie is one outrageous microframework.
 
 [![Build Status](https://travis-ci.org/garious/poochie.svg)](https://travis-ci.org/garious/poochie)
 
+[![Test Coverage](https://codeclimate.com/github/garious/poochie/badges/coverage.svg)](https://codeclimate.com/github/garious/poochie/coverage)
 
 Introduction
 ---
