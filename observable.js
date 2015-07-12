@@ -49,15 +49,11 @@ Publisher.prototype.get = function() {
 function Subscriber(args, f) {
     this.valid = false;
     this.f = f;
-    this.args = args;
+    this.args = [];
 
     var me = this;  // Avoid 'this' ambiguity.
     args.forEach(function(o) {
-        if (o instanceof Observable) {
-            o.subscribe(function() {
-                me.invalidate();
-            });
-        }
+        me.addArg(o);
     });
 }
 
@@ -67,9 +63,11 @@ Subscriber.prototype.constructor = Subscriber;
 Subscriber.prototype.addArg = function(o) {
     this.args.push(o);
     var me = this;
-    o.subscribe(function() {
-        me.invalidate();
-    });
+    if (o instanceof Observable) {
+        o.subscribe(function() {
+            me.invalidate();
+        });
+    }
 };
 
 Subscriber.prototype.invalidate = function() {

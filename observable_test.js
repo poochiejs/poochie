@@ -30,6 +30,9 @@ assert.equal(comp.get(), 9);
 x.set(5);
 assert.equal(comp.get(), 11);
 
+// Ensure the result is cached
+assert.equal(comp.get(), 11);
+
 // Same as above, but using the lift() helper
 x.set(3);
 var oAdd = observable.lift(add);
@@ -58,5 +61,16 @@ assert.equal(x instanceof observable.Observable, true);
 
 // Verify subscribers are instances of Observable
 assert.equal(comp instanceof observable.Observable, true);
+
+(function testSnapshot() {
+    var eq = assert.deepEqual;
+    var snapshot = observable.snapshot;
+
+    eq(snapshot(1), 1);
+    eq(snapshot([]), []);
+    eq(snapshot({}), {});
+    eq(snapshot({a: 1}), {a: 1});
+    eq(snapshot(observable.publisher(1)), 1);
+})();
 
 module.exports = 'passed!';
