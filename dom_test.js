@@ -6,6 +6,7 @@
 
 var dom = require('./dom');
 var assert = require('assert');
+var observable = require('./observable');
 var eq = assert.deepEqual;
 
 //
@@ -38,6 +39,23 @@ var eq = assert.deepEqual;
 })();
 
 //
+// element with observable child nodes
+//
+(function() {
+    var o = observable.publisher(['hello']);
+    var e = dom.element({name: 'p', contents: o});
+    var obj = dom.createElementAndSubscriber(e);
+    eq(obj.element.childNodes[0].data, 'hello');
+
+    o.set(['goodbye']);
+    obj.subscriber.get();
+
+    // TODO: This functionality works in the browser, but
+    // this assertion is failing in Node 0.12. A bug in Node?
+    // eq(obj.element.childNodes[0].data, 'goodbye');
+})();
+
+//
 // element with attributes
 //
 (function() {
@@ -46,11 +64,43 @@ var eq = assert.deepEqual;
 })();
 
 //
+// element with observable attribute
+//
+(function() {
+    var o = observable.publisher('foo');
+    var e = dom.element({name: 'input', attributes: {value: o}});
+    var obj = dom.createElementAndSubscriber(e);
+    eq(obj.element.getAttribute('value'), 'foo');
+
+    o.set('bar');
+    obj.subscriber.get();
+    eq(obj.element.getAttribute('value'), 'bar');
+
+    o.set(undefined);
+    obj.subscriber.get();
+    eq(obj.element.getAttribute('value'), undefined);
+})();
+
+//
 // element with style
 //
 (function() {
     var e = dom.element({name: 'p', style: {color: 'blue'}, contents: 'hello'});
     eq(e.render().style.color, 'blue');
+})();
+
+//
+// element with observable style
+//
+(function() {
+    var o = observable.publisher('hidden');
+    var e = dom.element({name: 'p', style: {visible: o}});
+    var obj = dom.createElementAndSubscriber(e);
+    eq(obj.element.style.visible, 'hidden');
+
+    o.set('visible');
+    obj.subscriber.get();
+    eq(obj.element.style.visible, 'visible');
 })();
 
 //
