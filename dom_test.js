@@ -82,6 +82,31 @@ var eq = assert.deepEqual;
 })();
 
 //
+// element with undefined attributes
+//
+(function() {
+    var e = dom.element({name: 'input', attributes: {value: undefined}});
+    var obj = dom.createElementAndSubscriber(e);
+
+    // Test that getAttribute does not return 'undefined';
+    // Note: I would have expected Node to return an empty string here, not null.
+    eq(obj.element.getAttribute('value'), null);
+})();
+
+//
+// element with undefined observable attribute
+//
+(function() {
+    var o = observable.publisher(undefined);
+    var e = dom.element({name: 'input', attributes: {value: o}});
+    var obj = dom.createElementAndSubscriber(e);
+
+    // Test that getAttribute does not return 'undefined';
+    // Note: I would have expected Node to return an empty string here, not null.
+    eq(obj.element.getAttribute('value'), null);
+})();
+
+//
 // createElement with observable attribute
 // This is the same as the test above, but using createElement(), which
 // sets up a timer to monitor any observables.
@@ -122,6 +147,14 @@ var eq = assert.deepEqual;
     o.set('visible');
     obj.subscriber.get();
     eq(obj.element.style.visible, 'visible');
+})();
+
+//
+// element with undefined style
+//
+(function() {
+    var e = dom.element({name: 'p', style: {color: undefined}});
+    eq('color' in e.render().style, false);
 })();
 
 //

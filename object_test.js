@@ -29,6 +29,9 @@ var eq = assert.deepEqual;
 
     eq(mixin({a: 1, b: 2}, {a: 3, c: 4}), {a: 3, b: 2, c: 4});
     eq(cascade([{a: 1, b: 2}, {a: 3, c: 4}]), {a: 3, b: 2, c: 4});
+
+    // Undefined properties should not override defined ones.
+    eq(mixin({a: 1}, {a: undefined}), {a: 1});
 })();
 
 module.exports = 'passed!';

@@ -56,9 +56,7 @@ function addAttribute(e, subscriber, k, v) {
         });
         subscriber.addArg(o);
     } else {
-        if (v !== undefined) {
-            e.setAttribute(k, v);
-        }
+        e.setAttribute(k, v);
     }
 }
 
@@ -89,7 +87,7 @@ function createElementAndSubscriber(ps) {
     var k;
     if (as) {
         for (k in as) {
-            if (as.hasOwnProperty(k) && k !== 'style' && as[k] !== undefined) {
+            if (k !== 'style' && as[k] !== undefined) {
                 addAttribute(e, subscriber, k, as[k]);
             }
         }
@@ -99,7 +97,7 @@ function createElementAndSubscriber(ps) {
     var style = ps.style;
     if (style) {
         for (var s in style) {
-            if (style.hasOwnProperty(s) && style[s] !== undefined) {
+            if (style[s] !== undefined) {
                 addStyle(e, subscriber, style, s);
             }
         }
@@ -127,9 +125,7 @@ function createElementAndSubscriber(ps) {
     var es = ps.handlers;
     if (typeof es === 'object') {
         for (k in es) {
-            if (es.hasOwnProperty(k)) {
-                e.addEventListener(k, es[k]);
-            }
+            e.addEventListener(k, es[k]);
         }
     }
     return {

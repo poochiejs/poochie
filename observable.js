@@ -134,9 +134,7 @@ function snapshot(o) {
                 var o2 = {};
                 var k;
                 for (k in o) {
-                    if (o.hasOwnProperty(k)) {
-                        o2[k] = snapshot(o[k]);
-                    }
+                    o2[k] = snapshot(o[k]);
                 }
                 return o2;
             }

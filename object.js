@@ -19,12 +19,10 @@ function mixin(o1, o2) {
     var o3 = {};
     var k;
     for (k in o1) {
-        if (o1.hasOwnProperty(k)) {
-            o3[k] = o1[k];
-        }
+        o3[k] = o1[k];
     }
     for (k in o2) {
-        if (o2.hasOwnProperty(k) && o2[k] !== undefined) {
+        if (o2[k] !== undefined) {
             o3[k] = o2[k];
         }
     }

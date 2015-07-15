@@ -43,6 +43,13 @@ eq(g1.style.clear, 'none');
 eq(g2.style.cssFloat, 'left');
 eq(g2.style.clear, 'none');
 
+// hcat also accepts observable lists of elements.
+div = hcat({}, observable.publisher([g1, g2]));
+g1 = div.contents.get()[0];
+eq(g1.style.clear, 'none');
+eq(g1.style.clear, 'none');
+
+
 //
 // vcat
 //
@@ -72,6 +79,16 @@ eq(g2.style.clear, 'both');
 // vcat also accepts observable lists of elements.
 div = vcat({}, observable.publisher([g1, g2]));
 g1 = div.contents.get()[0];
-eq(g1.style.clear, 'both');
+
+// vcat doesn't require an element size is known upfront.
+var b1 = dom.element({name: 'br'});
+var b2 = dom.element({name: 'br'});
+div = vcat([b1, b2]);
+b1 = div.contents[0];
+b2 = div.contents[1];
+eq(b1.style.cssFloat, 'left');
+eq(b1.style.clear, 'both');
+eq(b2.style.cssFloat, 'left');
+eq(b2.style.clear, 'both');
 
 module.exports = 'passed!';
