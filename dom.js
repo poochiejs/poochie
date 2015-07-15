@@ -24,6 +24,7 @@
 
 var document = require('global/document');
 var observable = require('./observable');
+var intervalTimers = [];
 
 // Add style 's' with value 'style[s]' to the DOM element 'e'.
 function addStyle(e, subscriber, style, s) {
@@ -145,10 +146,20 @@ function createElement(ps) {
     var obj = createElementAndSubscriber(ps);
 
     if (obj.subscriber.args.length > 0) {
-        setInterval(function() { obj.subscriber.get(); }, 30);
+        var id = setInterval(function() { obj.subscriber.get(); }, 30);
+        intervalTimers.push(id);
     }
 
     return obj.element;
+}
+
+//
+// clear all interval timers created by createElement()
+//
+function clearIntervalTimers() {
+    for (var i = 0; i < intervalTimers.length; i++) {
+        clearInterval(intervalTimers[i]);
+    }
 }
 
 //
@@ -198,6 +209,7 @@ function render(e) {
 module.exports = {
     createElement: createElement,
     createElementAndSubscriber: createElementAndSubscriber,
+    clearIntervalTimers: clearIntervalTimers,
     ReactiveElement: ReactiveElement,
     element: element,
     render: render

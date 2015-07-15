@@ -82,6 +82,27 @@ var eq = assert.deepEqual;
 })();
 
 //
+// createElement with observable attribute
+// This is the same as the test above, but using createElement(), which
+// sets up a timer to monitor any observables.
+//
+(function() {
+    var o = observable.publisher('foo');
+    var e = dom.element({name: 'input', attributes: {value: o}});
+    var elem = dom.createElement(e);
+    eq(elem.getAttribute('value'), 'foo');
+
+    function checkAttr() {
+        eq(elem.getAttribute('value'), 'bar');
+        dom.clearIntervalTimers();
+    }
+
+    o.set('bar');
+    setTimeout(checkAttr, 30);
+})();
+
+
+//
 // element with style
 //
 (function() {
