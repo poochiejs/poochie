@@ -1,20 +1,15 @@
 Poochie
 ===
 
-Poochie is one outrageous microframework.
-
 [![Build Status](https://travis-ci.org/garious/poochie.svg)](https://travis-ci.org/garious/poochie)
-
 [![Test Coverage](https://codeclimate.com/github/garious/poochie/badges/coverage.svg)](https://codeclimate.com/github/garious/poochie/coverage)
 
-Introduction
+Poochie is one outrageous microframework.
+
+Examples
 ---
 
 [Examples] (https://github.com/garious/poochie-examples)
-
-Poochie is reactive frontend micro-framework.  It was derived from the Yoink
-standard library, but unlike Yoink, uses the CommonJS module format so that
-it can be used with npm and browserify.
 
 
 Poochie vs Mercury
