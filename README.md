@@ -2,6 +2,7 @@ Poochie
 ===
 
 [![Build Status](https://travis-ci.org/garious/poochie.svg)](https://travis-ci.org/garious/poochie)
+[![npm version](https://badge.fury.io/js/poochie.svg)](http://badge.fury.io/js/poochie)
 [![Test Coverage](https://codeclimate.com/github/garious/poochie/badges/coverage.svg)](https://codeclimate.com/github/garious/poochie/coverage)
 
 Poochie is one outrageous microframework.
