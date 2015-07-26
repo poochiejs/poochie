@@ -51,6 +51,28 @@ var pub = observable.publisher;
     eq(oAdd(x, y).get(), 9);
 })();
 
+// Test observable list of subscriber.
+(function testObservableSubscribers() {
+    var x = pub(1);
+    var subs = pub([x, pub(2)]);
+
+    function add(a, b) { return a + b; }
+    var comp = observable.subscriber(subs, add);
+    eq(comp.get(), 3);
+
+    subs.set([pub(2), pub(3)]);
+    eq(comp.get(), 5);
+
+    // Old args should be unsubscribed.
+    eq(comp.valid, true);
+    x.set('kaboom');
+
+    // TODO: Add unsubscribe.
+    // eq(comp.valid, true);
+
+    eq(comp.get(), 5);
+})();
+
 // Test 'lift' utility.
 (function testLift() {
     function add(a, b) { return a + b; }

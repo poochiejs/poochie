@@ -49,9 +49,25 @@ Publisher.prototype.get = function() {
 function Subscriber(args, f) {
     this.valid = false;
     this.f = f;
+    this.oArgs = null;
     this.args = [];
 
     var me = this;  // Avoid 'this' ambiguity.
+
+    // Handle an observable list of subscribers.
+    if (args instanceof Observable) {
+        this.oArgs = args;
+        args = this.oArgs.get();
+        this.oArgs.subscribe(function() {
+            // TODO: unsubscribe previous values.
+            me.args = [];
+            me.oArgs.get().forEach(function(o) {
+                me.addArg(o);
+            });
+            me.invalidate();
+        });
+    }
+
     args.forEach(function(o) {
         me.addArg(o);
     });
