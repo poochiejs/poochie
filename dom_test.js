@@ -12,7 +12,7 @@ var eq = assert.deepEqual;
 //
 // Test 'element' and 'render'.
 //
-(function() {
+(function testElement() {
     var e = dom.element({name: 'br'});
     eq(e.name, 'br');
     eq(e.render().tagName, 'BR');
@@ -27,7 +27,7 @@ var eq = assert.deepEqual;
 //
 // element with child nodes
 //
-(function() {
+(function testElementWithChildNodes() {
     var e = dom.element({name: 'p', contents: 'hello'});
     eq(e.contents, 'hello');
 
@@ -41,7 +41,7 @@ var eq = assert.deepEqual;
 //
 // element with observable child nodes
 //
-(function() {
+(function testObservableChildNodes() {
     var o = observable.publisher(['hello']);
     var e = dom.element({name: 'p', contents: o});
     var obj = dom.createElementAndSubscriber(e);
@@ -58,7 +58,7 @@ var eq = assert.deepEqual;
 //
 // element with attributes
 //
-(function() {
+(function testAttributes() {
     var e = dom.element({name: 'p', attributes: {id: 'foo'}, contents: 'bar'});
     eq(e.render().getAttribute('id'), 'foo');
 })();
@@ -66,7 +66,7 @@ var eq = assert.deepEqual;
 //
 // element with observable attribute
 //
-(function() {
+(function testObservableAttributes() {
     var o = observable.publisher('foo');
     var e = dom.element({name: 'input', attributes: {value: o}});
     var obj = dom.createElementAndSubscriber(e);
@@ -84,7 +84,7 @@ var eq = assert.deepEqual;
 //
 // element with undefined attributes
 //
-(function() {
+(function testUndefinedAttributes() {
     var e = dom.element({name: 'input', attributes: {value: undefined}});
     var obj = dom.createElementAndSubscriber(e);
 
@@ -96,7 +96,7 @@ var eq = assert.deepEqual;
 //
 // element with undefined observable attribute
 //
-(function() {
+(function testUndefinedObservableAttributes() {
     var o = observable.publisher(undefined);
     var e = dom.element({name: 'input', attributes: {value: o}});
     var obj = dom.createElementAndSubscriber(e);
@@ -111,7 +111,7 @@ var eq = assert.deepEqual;
 // This is the same as the test above, but using createElement(), which
 // sets up a timer to monitor any observables.
 //
-(function() {
+(function testCreateElement() {
     var o = observable.publisher('foo');
     var e = dom.element({name: 'input', attributes: {value: o}});
     var elem = dom.createElement(e);
@@ -130,7 +130,7 @@ var eq = assert.deepEqual;
 //
 // element with style
 //
-(function() {
+(function testStyle() {
     var e = dom.element({name: 'p', style: {color: 'blue'}, contents: 'hello'});
     eq(e.render().style.color, 'blue');
 })();
@@ -138,7 +138,7 @@ var eq = assert.deepEqual;
 //
 // element with observable style
 //
-(function() {
+(function testObservableStyle() {
     var o = observable.publisher('hidden');
     var e = dom.element({name: 'p', style: {visible: o}});
     var obj = dom.createElementAndSubscriber(e);
@@ -152,7 +152,7 @@ var eq = assert.deepEqual;
 //
 // element with undefined style
 //
-(function() {
+(function testUndefinedStyle() {
     var e = dom.element({name: 'p', style: {color: undefined}});
     eq('color' in e.render().style, false);
 })();
@@ -160,14 +160,14 @@ var eq = assert.deepEqual;
 //
 // element with an event handler
 //
-(function() {
+(function testHandlers() {
     dom.element({name: 'p', handlers: {click: function() {}}}).render();
 })();
 
 //
 // Test 'dom.render'.
 //
-(function() {
+(function testRender() {
     var e = dom.element({name: 'p', contents: 'hello'});
     eq(dom.render(e).tagName, 'P');
 

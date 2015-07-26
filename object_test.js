@@ -11,7 +11,7 @@ var eq = assert.deepEqual;
 //
 // Test 'clone'.
 //
-(function() {
+(function testClone() {
     var e = {name: 'p', contents: 'hello'};
     var e2 = object.clone(e);
     e2.name = 'h1';
@@ -23,7 +23,7 @@ var eq = assert.deepEqual;
 //
 // Test 'mixin' and 'cascade'.
 //
-(function() {
+(function testMixin() {
     var mixin = object.mixin;
     var cascade = object.cascade;
 
