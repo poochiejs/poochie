@@ -1,6 +1,6 @@
 {
   "name": "poochie",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Reactive frontend library",
   "license": "BSD-3-Clause",
   "repository": {
@@ -11,7 +11,7 @@
     "test": "eslint *.js && istanbul cover -x '*test.js' test.js"
   },
   "dependencies": {
-    "global": ">=4.3.0"
+    "jsdom": "^5.6.1"
   },
   "devDependencies": {
     "codeclimate-test-reporter": ">=0.1.0",

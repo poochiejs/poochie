@@ -154,7 +154,7 @@ var eq = assert.deepEqual;
 //
 (function testUndefinedStyle() {
     var e = dom.element({name: 'p', style: {color: undefined}});
-    eq('color' in e.render().style, false);
+    eq(e.render().style.color, '');
 })();
 
 //

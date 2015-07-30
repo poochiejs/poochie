@@ -22,7 +22,8 @@
 
 'use strict';
 
-var document = require('global/document');
+var jsdom = require('jsdom').jsdom;
+var document = jsdom('');
 var observable = require('./observable');
 var intervalTimers = [];
 
