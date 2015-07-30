@@ -60,7 +60,7 @@ var eq = assert.deepEqual;
 //
 (function testAttributes() {
     var e = dom.element({name: 'p', attributes: {id: 'foo'}, contents: 'bar'});
-    eq(e.render().getAttribute('id'), 'foo');
+    eq(e.render().id, 'foo');
 })();
 
 //
@@ -70,15 +70,15 @@ var eq = assert.deepEqual;
     var o = observable.publisher('foo');
     var e = dom.element({name: 'input', attributes: {value: o}});
     var obj = dom.createElementAndSubscriber(e);
-    eq(obj.element.getAttribute('value'), 'foo');
+    eq(obj.element.value, 'foo');
 
     o.set('bar');
     obj.subscriber.get();
-    eq(obj.element.getAttribute('value'), 'bar');
+    eq(obj.element.value, 'bar');
 
     o.set(undefined);
     obj.subscriber.get();
-    eq(obj.element.getAttribute('value'), undefined);
+    eq(obj.element.value, '');
 })();
 
 //
@@ -89,8 +89,7 @@ var eq = assert.deepEqual;
     var obj = dom.createElementAndSubscriber(e);
 
     // Test that getAttribute does not return 'undefined';
-    // Note: I would have expected Node to return an empty string here, not null.
-    eq(obj.element.getAttribute('value'), null);
+    eq(obj.element.value, '');
 })();
 
 //
@@ -102,8 +101,7 @@ var eq = assert.deepEqual;
     var obj = dom.createElementAndSubscriber(e);
 
     // Test that getAttribute does not return 'undefined';
-    // Note: I would have expected Node to return an empty string here, not null.
-    eq(obj.element.getAttribute('value'), null);
+    eq(obj.element.value, '');
 })();
 
 //
@@ -115,10 +113,10 @@ var eq = assert.deepEqual;
     var o = observable.publisher('foo');
     var e = dom.element({name: 'input', attributes: {value: o}});
     var elem = dom.createElement(e);
-    eq(elem.getAttribute('value'), 'foo');
+    eq(elem.value, 'foo');
 
     function checkAttr() {
-        eq(elem.getAttribute('value'), 'bar');
+        eq(elem.value, 'bar');
         dom.clearIntervalTimers();
     }
 
