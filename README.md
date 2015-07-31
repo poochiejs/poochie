@@ -15,6 +15,19 @@ Examples
 [More Examples] (https://github.com/garious/poochie-examples)
 
 
+Why Poochie
+---
+
+I failed to find a web framework that allowed me to write a web app with the
+following properties:
+
+* The application description should be a single data-driven, declarative expression.
+* It should be possible to incrementally add dynamic behavior and maintain 100%
+  line and branch coverage.
+* It should be possible to introduce components without affecting the existing
+  behavior.
+
+
 Poochie vs Mercury
 ---
 
