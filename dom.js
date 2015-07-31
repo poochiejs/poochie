@@ -46,18 +46,18 @@ function addAttribute(e, subscriber, k, v) {
     if (v instanceof observable.Observable) {
         var val = v.get();
         if (val !== undefined) {
-            e.setAttribute(k, val);
+            e[k] = val;
         }
         var o = v.map(function(v2) {
             if (v2 !== undefined) {
-                e.setAttribute(k, v2);
+                e[k] = v2;
             } else {
-                e.removeAttribute(k);
+                delete e[k];
             }
         });
         subscriber.addArg(o);
     } else {
-        e.setAttribute(k, v);
+        e[k] = v;
     }
 }
 

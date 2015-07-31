@@ -49,10 +49,7 @@ var eq = assert.deepEqual;
 
     o.set(['goodbye']);
     obj.subscriber.get();
-
-    // TODO: This functionality works in the browser, but
-    // this assertion is failing in Node 0.12. A bug in Node?
-    // eq(obj.element.childNodes[0].data, 'goodbye');
+    eq(obj.element.childNodes[0].data, 'goodbye');
 })();
 
 //
@@ -68,17 +65,17 @@ var eq = assert.deepEqual;
 //
 (function testObservableAttributes() {
     var o = observable.publisher('foo');
-    var e = dom.element({name: 'input', attributes: {value: o}});
+    var e = dom.element({name: 'input', attributes: {required: o}});
     var obj = dom.createElementAndSubscriber(e);
-    eq(obj.element.value, 'foo');
+    eq(obj.element.required, 'foo');
 
     o.set('bar');
     obj.subscriber.get();
-    eq(obj.element.value, 'bar');
+    eq(obj.element.required, 'bar');
 
     o.set(undefined);
     obj.subscriber.get();
-    eq(obj.element.value, '');
+    eq('required' in obj.element, false);
 })();
 
 //
