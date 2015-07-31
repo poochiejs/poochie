@@ -10,7 +10,8 @@ Poochie is one outrageous microframework.
 Examples
 ---
 
-[Examples] (https://github.com/garious/poochie-examples)
+[Poochie - TodoMVC] (https://github.com/garious/poochie-todomvc)
+[More Examples] (https://github.com/garious/poochie-examples)
 
 
 Poochie vs Mercury
