@@ -4,6 +4,9 @@
 
 'use strict';
 
+var jsdom = require('jsdom').jsdom;
+GLOBAL.document = jsdom('');
+
 var dom = require('./dom');
 var assert = require('assert');
 var observable = require('./observable');
