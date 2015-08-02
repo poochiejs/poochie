@@ -173,4 +173,20 @@ var eq = assert.deepEqual;
     eq(dom.render('hello').data, 'hello');
 })();
 
+//
+// Test setting focus
+//
+(function testFocus() {
+    var o = observable.publisher(false);
+    var e = dom.element({name: 'p', focus: o, contents: 'hello'});
+
+    // Trigger blur()
+    var obj = dom.createElementAndSubscriber(e);
+    obj.subscriber.get();
+
+    // Trigger focus()
+    e.focus.set(true);
+    obj.subscriber.get();
+})();
+
 module.exports = 'passed!';
