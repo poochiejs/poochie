@@ -22,6 +22,7 @@
 
 'use strict';
 
+var document = require('global/document');
 var observable = require('./observable');
 var intervalTimers = [];
 
@@ -63,7 +64,7 @@ function setChildren(subscriber, e, xs) {
     e.innerHTML = '';
     for (var i = 0; i < xs.length; i++) {
         var x = xs[i];
-        x = typeof x === 'string' ? GLOBAL.document.createTextNode(x) : x;
+        x = typeof x === 'string' ? document.createTextNode(x) : x;
         if (typeof x.render === 'function') {
             x = x.render();
         }
@@ -76,7 +77,7 @@ function setChildren(subscriber, e, xs) {
 function createElementAndSubscriber(ps) {
 
     // Create DOM node
-    var e = GLOBAL.document.createElement(ps.name);
+    var e = document.createElement(ps.name);
 
     // Create a subscriber to watch any observables.
     var subscriber = observable.subscriber([], function() { return e; });
@@ -106,7 +107,7 @@ function createElementAndSubscriber(ps) {
     var xs = ps.contents;
     if (xs) {
         if (typeof xs === 'string') {
-            e.appendChild(GLOBAL.document.createTextNode(xs));
+            e.appendChild(document.createTextNode(xs));
         } else {
             if (xs instanceof observable.Observable) {
                 var xsObs = xs;
@@ -218,7 +219,7 @@ function element(as) {
 // Render a string or object with a render method, such as a ReactiveElement.
 function render(e) {
     if (typeof e === 'string') {
-        return GLOBAL.document.createTextNode(e);
+        return document.createTextNode(e);
     }
     return e.render();
 }
