@@ -174,6 +174,15 @@ var eq = assert.deepEqual;
 })();
 
 //
+// Test recursive render.
+//
+(function testRenderRender() {
+    var e = dom.element({name: 'p', contents: 'hello'});
+    var component = {render: function() {return e;}}
+    eq(dom.render(component).tagName, 'P');
+})();
+
+//
 // Test setting focus
 //
 (function testFocus() {

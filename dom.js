@@ -62,11 +62,7 @@ function addAttribute(e, subscriber, k, v) {
 function setChildren(subscriber, e, xs) {
     e.innerHTML = '';
     for (var i = 0; i < xs.length; i++) {
-        var x = xs[i];
-        x = typeof x === 'string' ? global.document.createTextNode(x) : x;
-        if (typeof x.render === 'function') {
-            x = x.render();
-        }
+        var x = render(xs[i]);
         e.appendChild(x);
     }
 }
@@ -219,8 +215,10 @@ function element(as) {
 function render(e) {
     if (typeof e === 'string') {
         return global.document.createTextNode(e);
+    } else if (typeof e.render === 'function') {
+        return render(e.render());
     }
-    return e.render();
+    return e;
 }
 
 module.exports = {
