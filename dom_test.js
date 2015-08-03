@@ -5,7 +5,7 @@
 'use strict';
 
 var jsdom = require('jsdom').jsdom;
-GLOBAL.document = jsdom('');
+global.document = jsdom('');
 
 var dom = require('./dom');
 var assert = require('assert');
