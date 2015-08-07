@@ -1,6 +1,8 @@
 Poochie
 ===
 
+[![Join the chat at https://gitter.im/garious/poochie](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/garious/poochie?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/garious/poochie.svg)](https://travis-ci.org/garious/poochie)
 [![npm version](https://badge.fury.io/js/poochie.svg)](http://badge.fury.io/js/poochie)
 [![Test Coverage](https://codeclimate.com/github/garious/poochie/badges/coverage.svg)](https://codeclimate.com/github/garious/poochie/coverage)
