@@ -18,10 +18,15 @@ function clone(o) {
 function mixin(o1, o2) {
     var o3 = {};
     var k;
-    for (k in o1) {
+    var i;
+    var keys = Object.keys(o1);
+    for (i = 0; i < keys.length; i++) {
+        k = keys[i];
         o3[k] = o1[k];
     }
-    for (k in o2) {
+    keys = Object.keys(o2);
+    for (i = 0; i < keys.length; i++) {
+        k = keys[i];
         if (o2[k] !== undefined) {
             o3[k] = o2[k];
         }

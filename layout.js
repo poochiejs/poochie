@@ -28,7 +28,7 @@ function setPosition(e1, pos) {
 function cat(as, xs, pos) {
     function setPositions(xs2) {
         var xs3 = [];
-        for (var i = 0; i < xs2.length; i += 1) {
+        for (var i = 0; i < xs2.length; i++) {
             xs3[i] = setPosition(xs2[i], pos);
         }
         return xs3;

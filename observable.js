@@ -30,10 +30,10 @@ Publisher.prototype.constructor = Publisher;
 Publisher.prototype.set = function(v) {
     this.value = v;
     if (this.subscribers) {
-        var me = this;
-        this.subscribers.forEach(function(f) {
-            f(me);
-        });
+        for (var i = 0; i < this.subscribers.length; i++) {
+            var f = this.subscribers[i];
+            f(this);
+        }
     }
     return this;
 };
@@ -61,16 +61,17 @@ function Subscriber(args, f) {
         this.oArgs.subscribe(function() {
             // TODO: unsubscribe previous values.
             me.args = [];
-            me.oArgs.get().forEach(function(o) {
-                me.addArg(o);
-            });
+            var args = me.oArgs.get();
+            for (var i = 0; i < args.length; i++) {
+                me.addArg(args[i]);
+            }
             me.invalidate();
         });
     }
 
-    args.forEach(function(o) {
-        me.addArg(o);
-    });
+    for (var i = 0; i < args.length; i++) {
+        me.addArg(args[i]);
+    }
 }
 
 Subscriber.prototype = new Observable();

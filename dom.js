@@ -81,7 +81,9 @@ function createElementAndSubscriber(ps) {
     var as = ps.attributes;
     var k;
     if (as) {
-        for (k in as) {
+        var keys = Object.keys(as);
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
             if (k !== 'style' && as[k] !== undefined) {
                 addAttribute(e, subscriber, k, as[k]);
             }
@@ -91,9 +93,11 @@ function createElementAndSubscriber(ps) {
     // Add Style
     var style = ps.style;
     if (style) {
-        for (var s in style) {
-            if (style[s] !== undefined) {
-                addStyle(e, subscriber, style, s);
+        var keys = Object.keys(style);
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            if (style[k] !== undefined) {
+                addStyle(e, subscriber, style, k);
             }
         }
     }
@@ -119,7 +123,9 @@ function createElementAndSubscriber(ps) {
     // Add event handlers
     var es = ps.handlers;
     if (typeof es === 'object') {
-        for (k in es) {
+        var keys = Object.keys(es);
+        for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
             e.addEventListener(k, es[k]);
         }
     }
