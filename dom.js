@@ -124,8 +124,8 @@ function createElementAndSubscriber(ps) {
     var es = ps.handlers;
     if (typeof es === 'object') {
         keys = Object.keys(es);
-        for (var i = 0; i < keys.length; i++) {
-            var k = keys[i];
+        for (i = 0; i < keys.length; i++) {
+            k = keys[i];
             e.addEventListener(k, es[k]);
         }
     }

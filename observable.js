@@ -19,6 +19,15 @@ Observable.prototype.subscribe = function(f) {
     return this;
 };
 
+Observable.prototype.invalidateSubscribers = function() {
+    if (this.subscribers) {
+        for (var i = 0; i < this.subscribers.length; i++) {
+            var f = this.subscribers[i];
+            f(this);
+        }
+    }
+};
+
 function Publisher(v) {
     this.value = v;
 }
@@ -29,12 +38,7 @@ Publisher.prototype.constructor = Publisher;
 
 Publisher.prototype.set = function(v) {
     this.value = v;
-    if (this.subscribers) {
-        for (var i = 0; i < this.subscribers.length; i++) {
-            var f = this.subscribers[i];
-            f(this);
-        }
-    }
+    this.invalidateSubscribers();
     return this;
 };
 
@@ -90,12 +94,7 @@ Subscriber.prototype.addArg = function(o) {
 Subscriber.prototype.invalidate = function() {
     if (this.valid) {
         this.valid = false;
-        if (this.subscribers) {
-            for (var i = 0; i < this.subscribers.length; i++) {
-                var f = this.subscribers[i];
-                f(this);
-            }
-        }
+        this.invalidateSubscribers();
     }
 };
 
