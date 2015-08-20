@@ -36,6 +36,17 @@ function addStyle(e, subscriber, style, s) {
     }
 }
 
+// Add style from 'style' object to the DOM element 'e'.
+function addStyles(e, subscriber, style) {
+    var keys = Object.keys(style);
+    for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        if (style[k] !== undefined) {
+            addStyle(e, subscriber, style, k);
+        }
+    }
+}
+
 // Add attribute 'k' with value 'v' to the DOM element 'e'.   If the
 // attribute's value is 'undefined', it will be ignored.  If the
 // attribute's value is an observable, then any time its value is
@@ -59,12 +70,69 @@ function addAttribute(e, subscriber, k, v) {
     }
 }
 
+// Add attributes from 'as' to the DOM element 'e'.
+function addAttributes(e, subscriber, as) {
+    var keys = Object.keys(as);
+    for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        if (k !== 'style' && as[k] !== undefined) {
+            addAttribute(e, subscriber, k, as[k]);
+        }
+    }
+}
+
 function setChildren(subscriber, e, xs) {
     e.innerHTML = '';
     for (var i = 0; i < xs.length; i++) {
         var x = render(xs[i]);
         e.appendChild(x);
     }
+}
+
+// Add contents from array 'xs' to the DOM element 'e'.
+function addContents(e, subscriber, xs) {
+    if (typeof xs === 'string') {
+        e.appendChild(global.document.createTextNode(xs));
+    } else {
+        if (xs instanceof observable.Observable) {
+            var xsObs = xs;
+            xs = xsObs.get();
+            var o = xsObs.map(function(ys) {
+                setChildren(subscriber, e, ys);
+            });
+            subscriber.addArg(o);
+        }
+        setChildren(subscriber, e, xs);
+    }
+}
+
+// Add handlers from 'es' to the DOM element 'e'.
+function addEventHandlers(e, subscriber, es) {
+    var keys = Object.keys(es);
+    for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        e.addEventListener(k, es[k]);
+    }
+}
+
+// Add focus handler to the DOM element 'e'.
+function addFocusHandler(e, subscriber, oFocus) {
+    function setFocus(focus) {
+        function onTimeout() {
+            if (focus) {
+                e.focus();
+            } else {
+                e.blur();
+            }
+        }
+
+        // Use setTimeout so that focus is set after the DOM has had an
+        // opportunity to render other attributes that may have changed,
+        // such as style.display.
+        setTimeout(onTimeout, 0);
+    }
+
+    subscriber.addArg(oFocus.map(setFocus));
 }
 
 // Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty',
@@ -78,73 +146,28 @@ function createElementAndSubscriber(ps) {
     var subscriber = observable.subscriber([], function() { return e; });
 
     // Add attributes
-    var as = ps.attributes;
-    var i, k, keys;
-    if (as) {
-        keys = Object.keys(as);
-        for (i = 0; i < keys.length; i++) {
-            k = keys[i];
-            if (k !== 'style' && as[k] !== undefined) {
-                addAttribute(e, subscriber, k, as[k]);
-            }
-        }
+    if (ps.attributes) {
+        addAttributes(e, subscriber, ps.attributes);
     }
 
     // Add Style
-    var style = ps.style;
-    if (style) {
-        keys = Object.keys(style);
-        for (i = 0; i < keys.length; i++) {
-            k = keys[i];
-            if (style[k] !== undefined) {
-                addStyle(e, subscriber, style, k);
-            }
-        }
+    if (ps.style) {
+        addStyles(e, subscriber, ps.style);
     }
 
     // Add child elements
-    var xs = ps.contents;
-    if (xs) {
-        if (typeof xs === 'string') {
-            e.appendChild(global.document.createTextNode(xs));
-        } else {
-            if (xs instanceof observable.Observable) {
-                var xsObs = xs;
-                xs = xsObs.get();
-                var o = xsObs.map(function(ys) {
-                    setChildren(subscriber, e, ys);
-                });
-                subscriber.addArg(o);
-            }
-            setChildren(subscriber, e, xs);
-        }
+    if (ps.contents) {
+        addContents(e, subscriber, ps.contents);
     }
 
     // Add event handlers
-    var es = ps.handlers;
-    if (typeof es === 'object') {
-        keys = Object.keys(es);
-        for (i = 0; i < keys.length; i++) {
-            k = keys[i];
-            e.addEventListener(k, es[k]);
-        }
+    if (typeof ps.handlers === 'object') {
+        addEventHandlers(e, subscriber, ps.handlers);
     }
 
+    // Add focus handler
     if (ps.focus instanceof observable.Observable) {
-        subscriber.addArg(ps.focus.map(function setFocus(focus) {
-            function onTimeout() {
-                if (focus) {
-                    e.focus();
-                } else {
-                    e.blur();
-                }
-            }
-
-            // Use setTimeout so that focus is set after the DOM has had an
-            // opportunity to render other attributes that may have changed,
-            // such as style.display.
-            setTimeout(onTimeout, 0);
-        }));
+        addFocusHandler(e, subscriber, ps.focus);
     }
 
     return {
