@@ -150,7 +150,9 @@ function snapshot(o) {
             } else {
                 var o2 = {};
                 var k;
-                for (k in o) {
+                var keys = Object.keys(o);
+                for (var i = 0; i < keys.length; i++) {
+                    k = keys[i];
                     o2[k] = snapshot(o[k]);
                 }
                 return o2;
