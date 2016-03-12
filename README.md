@@ -30,6 +30,29 @@ following properties:
   behavior.
 
 
+Poochie vs React
+---
+
+Poochie is designed for *succinctness* whereas React requires you to split
+your application into distinct stateful and stateless pieces, the *controller*,
+and the *view*, respectively. As a consequence, the React framework generates
+an entirely new virtual DOM tree any time the UI state changes. To make
+performance reasonable, it includes a [reconciliation]
+(https://facebook.github.io/react/docs/reconciliation.html) pass in its
+rendering pipeline. This pass attempts to reduce a O(n^3) algorithm down to a
+O(n) one. But even in its best case, O(n) is still far worse than the
+O(1) operations that a functionally-equivalent, hand-written JavaScript
+application would do. Poochie, on the other hand, is much closer to a
+*zero-cost* abstraction. Where React renders a virtual DOM every time any
+state changes, Poochie renders a virtual DOM **once**. When the rendering
+pass encounters an *observable*, Poochie subscribes to it and updates the
+DOM with changes directly - O(1).
+
+Regarding succinctness, Poochie won't bark at you for mixing your controller
+code with your view code. It assumes the *component* abstraction is sufficient
+for separating concerns.
+
+
 Poochie vs Mercury
 ---
 
@@ -37,7 +60,7 @@ Poochie and Mercury are similar in scope.  Both provide libraries and programmin
 techniques for defining testable, dynamic components in JavaScript.  Some
 differences:
 
-* Poochie does not use virtual-dom
+* Poochie does not use virtual DOM diffing.
 * Poochie is compact, it's 1.8kb min.gzip.js, that's 5 times smaller than Mercury.
 * Poochie is lean, it's an afternoon's read, under 500 LoC.
 
