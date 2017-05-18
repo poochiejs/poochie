@@ -112,20 +112,24 @@ var eq = assert.deepEqual;
 // This is the same as the test above, but using createElement(), which
 // sets up a timer to monitor any observables.
 //
-(function testCreateElement() {
-    var o = observable.publisher('foo');
-    var e = dom.element({name: 'input', attributes: {value: o}});
-    var elem = dom.createElement(e);
-    eq(elem.value, 'foo');
+describe('createElement', function() {
+    it('should take less than 100ms to execute', function(done) {
+        this.timeout(100);
+        var o = observable.publisher('foo');
+        var e = dom.element({name: 'input', attributes: {value: o}});
+        var elem = dom.createElement(e);
+        eq(elem.value, 'foo');
 
-    function checkAttr() {
-        eq(elem.value, 'bar');
-        dom.clearIntervalTimers();
-    }
+        function checkAttr() {
+            eq(elem.value, 'bar');
+            dom.clearIntervalTimers();
+            done();
+        }
 
-    o.set('bar');
-    setTimeout(checkAttr, 30);
-})();
+        o.set('bar');
+        setTimeout(checkAttr, 30);
+    });
+});
 
 
 //
