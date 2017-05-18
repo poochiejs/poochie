@@ -11,11 +11,11 @@
     "test": "eslint *.js && istanbul cover -x '*test.js' test.js"
   },
   "devDependencies": {
-    "codeclimate-test-reporter": ">=0.1.0",
-    "eslint": ">=0.24.1",
-    "istanbul": ">=0.3.17",
-    "jsdom": "^5.6.1",
-    "test": ">=0.0.5"
+    "codeclimate-test-reporter": "~0.4.1",
+    "eslint": "~3.19.0",
+    "istanbul": "~0.4.5",
+    "jsdom": "~10.1.0",
+    "test": "~0.6.0"
   },
   "eslintConfig": {
     "rules": {
