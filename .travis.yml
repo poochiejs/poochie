@@ -1,6 +1,7 @@
 language: node_js
 node_js:
   - "7"
+cache: yarn
 sudo: false
 addons:
   code_climate:
