@@ -1,7 +1,7 @@
 //
 // Interface tests
 //
-
+// @ts-check
 'use strict';
 
 var layout = require('./layout');

@@ -1,7 +1,7 @@
 //
 // Discover unit tests, run them and log their output.
 //
-
+// @ts-check
 'use strict';
 
 var fs = require('fs');

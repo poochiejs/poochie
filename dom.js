@@ -19,7 +19,7 @@
 //     simulator such as JsDom or Zombie.  A bare-bones JavaScript interpreter
 //     such as Node.js will suffice.
 //
-
+// @ts-check
 'use strict';
 
 var observable = require('./observable');

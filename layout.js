@@ -1,7 +1,7 @@
 //
 // A JavaScript library for 2D layout
 //
-
+// @ts-check
 'use strict';
 
 var dom = require('./dom');

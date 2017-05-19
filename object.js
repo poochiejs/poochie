@@ -3,7 +3,7 @@
 //
 //     object
 //
-
+// @ts-check
 'use strict';
 
 // Return a clone of the input object using prototype inheritance.

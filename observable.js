@@ -8,23 +8,18 @@
 // interface, which includes a get() and subscribe()
 // function.
 function Observable() {
+    this.subscribers = [];
 }
 
 Observable.prototype.subscribe = function(f) {
-    if (!this.subscribers) {
-        this.subscribers = [f];
-    } else {
-        this.subscribers.push(f);
-    }
+    this.subscribers.push(f);
     return this;
 };
 
 Observable.prototype.invalidateSubscribers = function() {
-    if (this.subscribers) {
-        for (var i = 0; i < this.subscribers.length; i++) {
-            var f = this.subscribers[i];
-            f(this);
-        }
+    for (var i = 0; i < this.subscribers.length; i++) {
+        var f = this.subscribers[i];
+        f(this);
     }
 };
 

@@ -8,15 +8,19 @@
     "type": "git"
   },
   "scripts": {
+    "tsc": "tsc --outDir lib",
     "test": "eslint *.js && nyc -x '*test.js' mocha test.js && nyc --reporter=lcov report"
   },
   "devDependencies": {
-    "codeclimate-test-reporter": "~0.4.1",
-    "eslint": "~3.19.0",
-    "jsdom": "~10.1.0",
-    "mocha": "~3.4.1",
-    "nyc": "~10.3.2",
-    "test": "~0.6.0"
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.18",
+    "codeclimate-test-reporter": "^0.4.1",
+    "eslint": "^3.19.0",
+    "jsdom": "^10.1.0",
+    "mocha": "^3.4.1",
+    "nyc": "^10.3.2",
+    "test": "^0.6.0",
+    "typescript": "^2.3.2"
   },
   "eslintConfig": {
     "rules": {
