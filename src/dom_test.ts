@@ -1,17 +1,17 @@
-var JSDOM = require('jsdom').JSDOM;
-var domObj = new JSDOM('');
+import { JSDOM } from 'jsdom';
+let domObj = new JSDOM('');
 global.document = domObj.window.document;
 
-var dom = require('./dom');
-var assert = require('assert');
-var observable = require('./observable');
-var eq = assert.deepEqual;
+import * as dom from './dom';
+import { deepEqual } from 'assert';
+import { publisher } from './observable';
 
 describe('dom', function() {
+    let eq = deepEqual;
 
     describe('#element()', function() {
         it('should render to a DOM element', function() {
-            var e = dom.element({name: 'br'});
+            let e = dom.element({name: 'br'});
             eq(e.name, 'br');
             eq(e.render().tagName, 'BR');
         });
@@ -25,7 +25,7 @@ describe('dom', function() {
         });
 
         it('should accept a string for its contents', function() {
-            var e = dom.element({name: 'p', contents: 'hello'});
+            let e = dom.element({name: 'p', contents: 'hello'});
             eq(e.contents, 'hello');
         });
 
@@ -34,9 +34,9 @@ describe('dom', function() {
         });
 
         it('should accept observables for its contents', function() {
-            var o = observable.publisher(['hello']);
-            var e = dom.element({name: 'p', contents: o});
-            var obj = dom.createElementAndSubscriber(e);
+            let o = publisher(['hello']);
+            let e = dom.element({name: 'p', contents: o});
+            let obj = dom.createElementAndSubscriber(e);
             eq(obj.element.childNodes[0].data, 'hello');
 
             o.set(['goodbye']);
@@ -45,14 +45,14 @@ describe('dom', function() {
         });
 
         it('should accept strings for attributes', function() {
-            var e = dom.element({name: 'p', attributes: {id: 'foo'}, contents: 'bar'});
+            let e = dom.element({name: 'p', attributes: {id: 'foo'}, contents: 'bar'});
             eq(e.render().id, 'foo');
         });
 
         it('should accept observable attributes', function() {
-            var o = observable.publisher('foo');
-            var e = dom.element({name: 'input', attributes: {value: o}});
-            var obj = dom.createElementAndSubscriber(e);
+            let o = publisher('foo');
+            let e = dom.element({name: 'input', attributes: {value: o}});
+            let obj = dom.createElementAndSubscriber(e);
             eq(obj.element.value, 'foo');
 
             o.set('bar');
@@ -67,17 +67,17 @@ describe('dom', function() {
         });
 
         it('should accept undefined attributes', function() {
-            var e = dom.element({name: 'input', attributes: {value: undefined}});
-            var obj = dom.createElementAndSubscriber(e);
+            let e = dom.element({name: 'input', attributes: {value: undefined}});
+            let obj = dom.createElementAndSubscriber(e);
 
             // Test that getAttribute does not return 'undefined';
             eq(obj.element.value, '');
         });
 
         it('should accept undefined observable attributes', function() {
-            var o = observable.publisher(undefined);
-            var e = dom.element({name: 'input', attributes: {value: o}});
-            var obj = dom.createElementAndSubscriber(e);
+            let o = publisher(undefined);
+            let e = dom.element({name: 'input', attributes: {value: o}});
+            let obj = dom.createElementAndSubscriber(e);
 
             // Test that getAttribute does not return 'undefined';
             eq(obj.element.value, '');
@@ -85,9 +85,9 @@ describe('dom', function() {
 
         it('should setup DOM callbacks observable reaches createElement()', function(done) {
             this.timeout(100);
-            var o = observable.publisher('foo');
-            var e = dom.element({name: 'input', attributes: {value: o}});
-            var elem = dom.createElement(e);
+            let o = publisher('foo');
+            let e = dom.element({name: 'input', attributes: {value: o}});
+            let elem = dom.createElement(e);
             eq(elem.value, 'foo');
 
             function checkAttr() {
@@ -101,14 +101,14 @@ describe('dom', function() {
         });
 
         it('should accept a style parameter', function() {
-            var e = dom.element({name: 'p', style: {color: 'blue'}, contents: 'hello'});
+            let e = dom.element({name: 'p', style: {color: 'blue'}, contents: 'hello'});
             eq(e.render().style.color, 'blue');
         });
 
         it('should accept a observable styles', function() {
-            var o = observable.publisher('hidden');
-            var e = dom.element({name: 'p', style: {visible: o}});
-            var obj = dom.createElementAndSubscriber(e);
+            let o = publisher('hidden');
+            let e = dom.element({name: 'p', style: {visible: o}});
+            let obj = dom.createElementAndSubscriber(e);
             eq(obj.element.style.visible, 'hidden');
 
             o.set('visible');
@@ -117,7 +117,7 @@ describe('dom', function() {
         });
 
         it('should accept a undefined as a style', function() {
-            var e = dom.element({name: 'p', style: {color: undefined}});
+            let e = dom.element({name: 'p', style: {color: undefined}});
             eq(e.render().style.color, '');
         });
 
@@ -128,7 +128,7 @@ describe('dom', function() {
 
     describe('#render()', function() {
         it('should render an object into a DOM element', function() {
-            var e = dom.element({name: 'p', contents: 'hello'});
+            let e = dom.element({name: 'p', contents: 'hello'});
             eq(dom.render(e).tagName, 'P');
         });
 
@@ -137,19 +137,19 @@ describe('dom', function() {
         });
 
         it('should render recursively so long as vdom elements are returned', function() {
-            var e = dom.element({name: 'p', contents: 'hello'});
-            var component = {render: function() {return e;}}
+            let e = dom.element({name: 'p', contents: 'hello'});
+            let component = {render: function() {return e;}}
             eq(dom.render(component).tagName, 'P');
         });
     });
 
     describe('#element() with focus', function() {
-        var o = observable.publisher(false);
-        var e = dom.element({name: 'p', focus: o, contents: 'hello'});
+        let o = publisher(false);
+        let e = dom.element({name: 'p', focus: o, contents: 'hello'});
 
         it('should set blur and focus', function() {
             // Trigger blur()
-            var obj = dom.createElementAndSubscriber(e);
+            let obj = dom.createElementAndSubscriber(e);
             obj.subscriber.get();
 
             // Trigger focus()
@@ -157,5 +157,4 @@ describe('dom', function() {
             obj.subscriber.get();
         });
     });
-
 });
