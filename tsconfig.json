@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "allowJs": true
+        "allowJs": true,
+        "outDir": "lib"
     },
     "include": [
         "src/*.js",
