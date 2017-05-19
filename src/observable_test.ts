@@ -2,8 +2,6 @@
 // Tests!
 //
 
-'use strict';
-
 var observable = require('./observable');
 var assert = require('assert');
 var eq = assert.deepEqual;
