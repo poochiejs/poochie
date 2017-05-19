@@ -1,8 +1,6 @@
 //
 // Tests!
 //
-// @ts-check
-'use strict';
 
 var JSDOM = require('jsdom').JSDOM;
 var domObj = new JSDOM('');

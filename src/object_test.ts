@@ -1,8 +1,6 @@
 //
 // Tests!
 //
-// @ts-check
-'use strict';
 
 var object = require('./object');
 var assert = require('assert');
