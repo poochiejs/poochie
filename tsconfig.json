@@ -3,7 +3,7 @@
         "allowJs": true
     },
     "include": [
-        "*.js",
-        "*.ts"
+        "src/*.js",
+        "src/*.ts"
     ]
 }

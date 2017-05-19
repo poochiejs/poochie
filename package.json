@@ -9,7 +9,7 @@
   },
   "scripts": {
     "tsc": "tsc --outDir lib",
-    "test": "eslint *.js && nyc -x '*test.js' mocha test.js && nyc --reporter=lcov report"
+    "test": "eslint *.js && nyc -x 'src/*test.js' mocha src/test.js && nyc --reporter=lcov report"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",
