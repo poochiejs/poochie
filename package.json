@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint src/*.js",
-    "test": "tsc && mocha lib/test.js",
+    "test": "tsc && mocha lib/",
     "coverage": "nyc -x 'lib/*test.js' npm test && nyc --reporter=lcov report"
   },
   "devDependencies": {
