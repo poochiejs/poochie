@@ -19,17 +19,15 @@
 //     simulator such as JsDom or Zombie.  A bare-bones JavaScript interpreter
 //     such as Node.js will suffice.
 //
-// @ts-check
-'use strict';
 
-var observable = require('./observable');
-var intervalTimers = [];
+import * as observable from './observable';
+let intervalTimers = [];
 
 // Add style 's' with value 'style[s]' to the DOM element 'e'.
 function addStyle(e, subscriber, style, s) {
     if (style[s] instanceof observable.Observable) {
         e.style[s] = style[s].get();
-        var o = style[s].map(function(v) { e.style[s] = v; });
+        let o = style[s].map(function(v) { e.style[s] = v; });
         subscriber.addArg(o);
     } else {
         e.style[s] = style[s];
@@ -38,9 +36,9 @@ function addStyle(e, subscriber, style, s) {
 
 // Add style from 'style' object to the DOM element 'e'.
 function addStyles(e, subscriber, style) {
-    var keys = Object.keys(style);
-    for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
+    let keys = Object.keys(style);
+    for (let i = 0; i < keys.length; i++) {
+        let k = keys[i];
         if (style[k] !== undefined) {
             addStyle(e, subscriber, style, k);
         }
@@ -53,11 +51,11 @@ function addStyles(e, subscriber, style) {
 // 'undefined', the attribute will be removed.
 function addAttribute(e, subscriber, k, v) {
     if (v instanceof observable.Observable) {
-        var val = v.get();
+        let val = v.get();
         if (val !== undefined) {
             e[k] = val;
         }
-        var o = v.map(function(v2) {
+        let o = v.map(function(v2) {
             if (v2 !== undefined) {
                 e[k] = v2;
             } else {
@@ -72,9 +70,9 @@ function addAttribute(e, subscriber, k, v) {
 
 // Add attributes from 'as' to the DOM element 'e'.
 function addAttributes(e, subscriber, as) {
-    var keys = Object.keys(as);
-    for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
+    let keys = Object.keys(as);
+    for (let i = 0; i < keys.length; i++) {
+        let k = keys[i];
         if (k !== 'style' && as[k] !== undefined) {
             addAttribute(e, subscriber, k, as[k]);
         }
@@ -83,8 +81,8 @@ function addAttributes(e, subscriber, as) {
 
 function setChildren(subscriber, e, xs) {
     e.innerHTML = '';
-    for (var i = 0; i < xs.length; i++) {
-        var x = render(xs[i]);
+    for (let i = 0; i < xs.length; i++) {
+        let x = render(xs[i]);
         e.appendChild(x);
     }
 }
@@ -95,9 +93,9 @@ function addContents(e, subscriber, xs) {
         e.appendChild(global.document.createTextNode(xs));
     } else {
         if (xs instanceof observable.Observable) {
-            var xsObs = xs;
+            let xsObs = xs;
             xs = xsObs.get();
-            var o = xsObs.map(function(ys) {
+            let o = xsObs.map(function(ys) {
                 setChildren(subscriber, e, ys);
             });
             subscriber.addArg(o);
@@ -108,9 +106,9 @@ function addContents(e, subscriber, xs) {
 
 // Add handlers from 'es' to the DOM element 'e'.
 function addEventHandlers(e, subscriber, es) {
-    var keys = Object.keys(es);
-    for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
+    let keys = Object.keys(es);
+    for (let i = 0; i < keys.length; i++) {
+        let k = keys[i];
         e.addEventListener(k, es[k]);
     }
 }
@@ -137,13 +135,13 @@ function addFocusHandler(e, subscriber, oFocus) {
 
 // Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty',
 // an array of subelements 'xs', and an object of event handlers 'es'.
-function createElementAndSubscriber(ps) {
+export function createElementAndSubscriber(ps) {
 
     // Create DOM node
-    var e = global.document.createElement(ps.name);
+    let e = global.document.createElement(ps.name);
 
     // Create a subscriber to watch any observables.
-    var subscriber = observable.subscriber([], function() { return e; });
+    let subscriber = observable.subscriber([], function() { return e; });
 
     // Add attributes
     if (ps.attributes) {
@@ -176,15 +174,15 @@ function createElementAndSubscriber(ps) {
     };
 }
 
-function createElement(ps) {
+export function createElement(ps) {
     if (typeof ps === 'string') {
         ps = {name: ps};
     }
 
-    var obj = createElementAndSubscriber(ps);
+    let obj = createElementAndSubscriber(ps);
 
     if (obj.subscriber.args.length > 0) {
-        var id = setInterval(function() { obj.subscriber.get(); }, 30);
+        let id = setInterval(function() { obj.subscriber.get(); }, 30);
         intervalTimers.push(id);
     }
 
@@ -194,8 +192,8 @@ function createElement(ps) {
 //
 // clear all interval timers created by createElement()
 //
-function clearIntervalTimers() {
-    for (var i = 0; i < intervalTimers.length; i++) {
+export function clearIntervalTimers() {
+    for (let i = 0; i < intervalTimers.length; i++) {
         clearInterval(intervalTimers[i]);
     }
 }
@@ -203,7 +201,7 @@ function clearIntervalTimers() {
 //
 // element({name, attributes, style, contents, handlers})
 //
-function ReactiveElement(as) {
+export function ReactiveElement(as) {
 
     if (typeof as === 'string') {
         as = {name: as};
@@ -236,12 +234,12 @@ ReactiveElement.prototype.render = function() {
     return createElement(this);
 };
 
-function element(as) {
+export function element(as) {
     return new ReactiveElement(as);
 }
 
 // Render a string or object with a render method, such as a ReactiveElement.
-function render(e) {
+export function render(e) {
     if (typeof e === 'string') {
         return global.document.createTextNode(e);
     } else if (typeof e.render === 'function') {
@@ -249,12 +247,3 @@ function render(e) {
     }
     return e;
 }
-
-module.exports = {
-    createElement: createElement,
-    createElementAndSubscriber: createElementAndSubscriber,
-    clearIntervalTimers: clearIntervalTimers,
-    ReactiveElement: ReactiveElement,
-    element: element,
-    render: render
-};

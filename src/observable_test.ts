@@ -1,7 +1,4 @@
-// TODO: typecheck observable
-//import * as observable from './observable';
-let observable = require('./observable');
-
+import * as observable from './observable';
 import { deepEqual } from 'assert';
 
 describe('observable', function() {
