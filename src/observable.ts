@@ -2,12 +2,10 @@
 // Observable JS
 //
 
-'use strict';
-
 // Publishers and Subscribers share the Observable
 // interface, which includes a get() and subscribe()
 // function.
-function Observable() {
+export function Observable() {
     this.subscribers = [];
 }
 
@@ -17,13 +15,13 @@ Observable.prototype.subscribe = function(f) {
 };
 
 Observable.prototype.invalidateSubscribers = function() {
-    for (var i = 0; i < this.subscribers.length; i++) {
-        var f = this.subscribers[i];
+    for (let i = 0; i < this.subscribers.length; i++) {
+        let f = this.subscribers[i];
         f(this);
     }
 };
 
-function Publisher(v) {
+export function Publisher(v) {
     this.value = v;
 }
 
@@ -45,13 +43,13 @@ Publisher.prototype.get = function() {
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
-function Subscriber(args, f) {
+export function Subscriber(args, f) {
     this.valid = false;
     this.f = f;
     this.oArgs = null;
     this.args = [];
 
-    var me = this;  // Avoid 'this' ambiguity.
+    let me = this;  // Avoid 'this' ambiguity.
 
     // Handle an observable list of subscribers.
     if (args instanceof Observable) {
@@ -60,15 +58,15 @@ function Subscriber(args, f) {
         this.oArgs.subscribe(function() {
             // TODO: unsubscribe previous values.
             me.args = [];
-            var args = me.oArgs.get();
-            for (var i = 0; i < args.length; i++) {
+            let args = me.oArgs.get();
+            for (let i = 0; i < args.length; i++) {
                 me.addArg(args[i]);
             }
             me.invalidate();
         });
     }
 
-    for (var i = 0; i < args.length; i++) {
+    for (let i = 0; i < args.length; i++) {
         me.addArg(args[i]);
     }
 }
@@ -78,7 +76,7 @@ Subscriber.prototype.constructor = Subscriber;
 
 Subscriber.prototype.addArg = function(o) {
     this.args.push(o);
-    var me = this;
+    let me = this;
     if (o instanceof Observable) {
         o.subscribe(function() {
             me.invalidate();
@@ -97,16 +95,16 @@ Subscriber.prototype.get = function() {
     if (this.valid) {
         return this.value;
     } else {
-        var vals = this.args.map(function(o) {
+        let vals = this.args.map(function(o) {
             return o instanceof Observable ? o.get() : o;
         });
 
-        var oldValue = this.value;
+        let oldValue = this.value;
         this.value = this.f.apply(null, vals);
         this.valid = true;
 
         if (this.value !== oldValue && this.subscribers) {
-            var me = this;
+            let me = this;
             this.subscribers.forEach(function(f) {
                 f(me);
             });
@@ -116,7 +114,7 @@ Subscriber.prototype.get = function() {
     }
 };
 
-function subscriber(args, f) {
+export function subscriber(args, f) {
     return new Subscriber(args, f);
 }
 
@@ -126,15 +124,14 @@ Observable.prototype.map = function(f) {
 };
 
 // Handy function to lift a raw function into the observable realm
-function lift(f) {
-    return function() {
-        var args = Array.prototype.slice.call(arguments);
+export function lift(f) {
+    return function(...args) {
         return subscriber(args, f);
     };
 }
 
 // Handy function to capture the current state of an object containing observables
-function snapshot(o) {
+export function snapshot(o) {
     if (typeof o === 'object') {
         if (o instanceof Observable) {
             return snapshot(o.get());
@@ -142,10 +139,10 @@ function snapshot(o) {
             if (o instanceof Array) {
                 return o.map(snapshot);
             } else {
-                var o2 = {};
-                var k;
-                var keys = Object.keys(o);
-                for (var i = 0; i < keys.length; i++) {
+                let o2 = {};
+                let k;
+                let keys = Object.keys(o);
+                for (let i = 0; i < keys.length; i++) {
                     k = keys[i];
                     o2[k] = snapshot(o[k]);
                 }
@@ -157,16 +154,6 @@ function snapshot(o) {
     }
 }
 
-function publisher(v) {
+export function publisher(v) {
     return new Publisher(v);
 }
-
-module.exports = {
-    Observable: Observable,
-    Publisher: Publisher,
-    publisher: publisher,
-    Subscriber: Subscriber,
-    subscriber: subscriber,
-    lift: lift,
-    snapshot: snapshot
-};
