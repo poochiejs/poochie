@@ -15,8 +15,7 @@ Observable.prototype.subscribe = function(f) {
 };
 
 Observable.prototype.invalidateSubscribers = function() {
-    for (let i = 0; i < this.subscribers.length; i++) {
-        let f = this.subscribers[i];
+    for (const f of this.subscribers) {
         f(this);
     }
 };
@@ -49,25 +48,25 @@ export function Subscriber(args, f) {
     this.oArgs = null;
     this.args = [];
 
-    let me = this;  // Avoid 'this' ambiguity.
+    const me = this;  // Avoid 'this' ambiguity.
 
     // Handle an observable list of subscribers.
     if (args instanceof Observable) {
         this.oArgs = args;
         args = this.oArgs.get();
-        this.oArgs.subscribe(function() {
+        this.oArgs.subscribe(() => {
             // TODO: unsubscribe previous values.
             me.args = [];
-            let args = me.oArgs.get();
-            for (let i = 0; i < args.length; i++) {
-                me.addArg(args[i]);
+            const xs = me.oArgs.get();
+            for (const x of xs) {
+                me.addArg(x);
             }
             me.invalidate();
         });
     }
 
-    for (let i = 0; i < args.length; i++) {
-        me.addArg(args[i]);
+    for (const arg of args) {
+        me.addArg(arg);
     }
 }
 
@@ -76,9 +75,9 @@ Subscriber.prototype.constructor = Subscriber;
 
 Subscriber.prototype.addArg = function(o) {
     this.args.push(o);
-    let me = this;
+    const me = this;
     if (o instanceof Observable) {
-        o.subscribe(function() {
+        o.subscribe(() => {
             me.invalidate();
         });
     }
@@ -95,17 +94,14 @@ Subscriber.prototype.get = function() {
     if (this.valid) {
         return this.value;
     } else {
-        let vals = this.args.map(function(o) {
-            return o instanceof Observable ? o.get() : o;
-        });
-
-        let oldValue = this.value;
+        const vals = this.args.map((o) => o instanceof Observable ? o.get() : o);
+        const oldValue = this.value;
         this.value = this.f.apply(null, vals);
         this.valid = true;
 
         if (this.value !== oldValue && this.subscribers) {
-            let me = this;
-            this.subscribers.forEach(function(f) {
+            const me = this;
+            this.subscribers.forEach((f) => {
                 f(me);
             });
         }
@@ -125,9 +121,7 @@ Observable.prototype.map = function(f) {
 
 // Handy function to lift a raw function into the observable realm
 export function lift(f) {
-    return function(...args) {
-        return subscriber(args, f);
-    };
+    return (...args) => subscriber(args, f);
 }
 
 // Handy function to capture the current state of an object containing observables
@@ -139,9 +133,9 @@ export function snapshot(o) {
             if (o instanceof Array) {
                 return o.map(snapshot);
             } else {
-                let o2 = {};
+                const o2 = {};
                 let k;
-                let keys = Object.keys(o);
+                const keys = Object.keys(o);
                 for (let i = 0; i < keys.length; i++) {
                     k = keys[i];
                     o2[k] = snapshot(o[k]);

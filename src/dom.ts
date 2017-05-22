@@ -21,13 +21,13 @@
 //
 
 import * as observable from './observable';
-let intervalTimers = [];
+const intervalTimers = [];
 
 // Add style 's' with value 'style[s]' to the DOM element 'e'.
 function addStyle(e, subscriber, style, s) {
     if (style[s] instanceof observable.Observable) {
         e.style[s] = style[s].get();
-        let o = style[s].map(function(v) { e.style[s] = v; });
+        const o = style[s].map((v) => { e.style[s] = v; });
         subscriber.addArg(o);
     } else {
         e.style[s] = style[s];
@@ -36,9 +36,8 @@ function addStyle(e, subscriber, style, s) {
 
 // Add style from 'style' object to the DOM element 'e'.
 function addStyles(e, subscriber, style) {
-    let keys = Object.keys(style);
-    for (let i = 0; i < keys.length; i++) {
-        let k = keys[i];
+    const keys = Object.keys(style);
+    for (const k of keys) {
         if (style[k] !== undefined) {
             addStyle(e, subscriber, style, k);
         }
@@ -51,11 +50,11 @@ function addStyles(e, subscriber, style) {
 // 'undefined', the attribute will be removed.
 function addAttribute(e, subscriber, k, v) {
     if (v instanceof observable.Observable) {
-        let val = v.get();
+        const val = v.get();
         if (val !== undefined) {
             e[k] = val;
         }
-        let o = v.map(function(v2) {
+        const o = v.map((v2) => {
             if (v2 !== undefined) {
                 e[k] = v2;
             } else {
@@ -70,9 +69,8 @@ function addAttribute(e, subscriber, k, v) {
 
 // Add attributes from 'as' to the DOM element 'e'.
 function addAttributes(e, subscriber, as) {
-    let keys = Object.keys(as);
-    for (let i = 0; i < keys.length; i++) {
-        let k = keys[i];
+    const keys = Object.keys(as);
+    for (const k of keys) {
         if (k !== 'style' && as[k] !== undefined) {
             addAttribute(e, subscriber, k, as[k]);
         }
@@ -81,9 +79,9 @@ function addAttributes(e, subscriber, as) {
 
 function setChildren(subscriber, e, xs) {
     e.innerHTML = '';
-    for (let i = 0; i < xs.length; i++) {
-        let x = render(xs[i]);
-        e.appendChild(x);
+    for (const x of xs) {
+        const nd = render(x);
+        e.appendChild(nd);
     }
 }
 
@@ -93,9 +91,9 @@ function addContents(e, subscriber, xs) {
         e.appendChild(global.document.createTextNode(xs));
     } else {
         if (xs instanceof observable.Observable) {
-            let xsObs = xs;
+            const xsObs = xs;
             xs = xsObs.get();
-            let o = xsObs.map(function(ys) {
+            const o = xsObs.map((ys) => {
                 setChildren(subscriber, e, ys);
             });
             subscriber.addArg(o);
@@ -106,9 +104,8 @@ function addContents(e, subscriber, xs) {
 
 // Add handlers from 'es' to the DOM element 'e'.
 function addEventHandlers(e, subscriber, es) {
-    let keys = Object.keys(es);
-    for (let i = 0; i < keys.length; i++) {
-        let k = keys[i];
+    const keys = Object.keys(es);
+    for (const k of keys) {
         e.addEventListener(k, es[k]);
     }
 }
@@ -138,10 +135,10 @@ function addFocusHandler(e, subscriber, oFocus) {
 export function createElementAndSubscriber(ps) {
 
     // Create DOM node
-    let e = global.document.createElement(ps.name);
+    const e = global.document.createElement(ps.name);
 
     // Create a subscriber to watch any observables.
-    let subscriber = observable.subscriber([], function() { return e; });
+    const subscriber = observable.subscriber([], () => e);
 
     // Add attributes
     if (ps.attributes) {
@@ -170,7 +167,7 @@ export function createElementAndSubscriber(ps) {
 
     return {
         element: e,
-        subscriber: subscriber
+        subscriber,
     };
 }
 
@@ -179,10 +176,10 @@ export function createElement(ps) {
         ps = {name: ps};
     }
 
-    let obj = createElementAndSubscriber(ps);
+    const obj = createElementAndSubscriber(ps);
 
     if (obj.subscriber.args.length > 0) {
-        let id = setInterval(function() { obj.subscriber.get(); }, 30);
+        const id = setInterval(() => { obj.subscriber.get(); }, 30);
         intervalTimers.push(id);
     }
 
@@ -193,8 +190,8 @@ export function createElement(ps) {
 // clear all interval timers created by createElement()
 //
 export function clearIntervalTimers() {
-    for (let i = 0; i < intervalTimers.length; i++) {
-        clearInterval(intervalTimers[i]);
+    for (const timer of intervalTimers) {
+        clearInterval(timer);
     }
 }
 

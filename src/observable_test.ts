@@ -1,42 +1,38 @@
-import * as observable from './observable';
 import { deepEqual } from 'assert';
+import * as observable from './observable';
 
-describe('observable', function() {
-    let eq = deepEqual;
-    let pub = observable.publisher;
+describe('observable', () => {
+    const eq = deepEqual;
+    const pub = observable.publisher;
 
     // Observable values without objects.
-    describe('#publisher()', function() {
-        let x = pub(5);
-        let y = pub(6);
+    describe('#publisher()', () => {
+        const x = pub(5);
+        const y = pub(6);
 
-        it('should return its initial value', function() {
+        it('should return its initial value', () => {
             eq(x.get(), 5);
             eq(y.get(), 6);
         });
 
-        it('should return its new value', function() {
+        it('should return its new value', () => {
             x.set(3);
             eq(x.get(), 3);
         });
     });
 
-    describe('#map()', function() {
-        let x = pub(3);
-
-        it('should return an observable that applies a function', function() {
-            function inc(a) { return a + 1; }
-            eq(x.map(inc).get(), 4);
+    describe('#map()', () => {
+        it('should return an observable that applies a function', () => {
+            eq(pub(3).map((x) => x + 1).get(), 4);
         });
     });
 
-    describe('#subscriber()', function() {
-        let x = pub(3);
-        let y = pub(6);
-        function add(a, b) { return a + b; }
+    describe('#subscriber()', () => {
+        const x = pub(3);
+        const y = pub(6);
 
-        it('should observe changes to publishers', function() {
-            let comp = observable.subscriber([x, y], add);
+        it('should observe changes to publishers', () => {
+            const comp = observable.subscriber([x, y], (a, b) => a + b);
             eq(comp.set, undefined);
             eq(comp.get(), 9);
 
@@ -47,21 +43,20 @@ describe('observable', function() {
             eq(comp.get(), 11);
         });
 
-        it('should work the same using lift()', function() {
+        it('should work the same using lift()', () => {
             // Same as above, but using the lift() helper
             x.set(3);
-            let oAdd = observable.lift(add);
-            eq(oAdd(x, y).get(), 9);
+            const add = observable.lift((a, b) => a + b);
+            eq(add(x, y).get(), 9);
         });
     });
 
-    describe('#subscriber() of observables', function() {
-        let x = pub(1);
-        let subs = pub([x, pub(2)]);
+    describe('#subscriber() of observables', ()  => {
+        const x = pub(1);
+        const subs = pub([x, pub(2)]);
 
-        it('should observe changes to observables', function() {
-            function add(a, b) { return a + b; }
-            let comp = observable.subscriber(subs, add);
+        it('should observe changes to observables', () => {
+            const comp = observable.subscriber(subs, (a, b) => a + b);
             eq(comp.get(), 3);
 
             subs.set([pub(2), pub(3)]);
@@ -78,18 +73,17 @@ describe('observable', function() {
         });
     });
 
-    describe('#lift()', function() {
-        function add(a, b) { return a + b; }
-          let oAdd = observable.lift(add);
+    describe('#lift()', () => {
+        const add = observable.lift((a, b) => a + b);
 
-        it('should create a function that returns an observable', function() {
-            eq(oAdd(pub(3), pub(6)).get(), 9);
-            eq(oAdd(pub(3), 6).get(), 9);
+        it('should create a function that returns an observable', () => {
+            eq(add(pub(3), pub(6)).get(), 9);
+            eq(add(pub(3), 6).get(), 9);
         });
 
-        it('should create a chainable function that returns an observable', function() {
-            let x = pub(3);
-            let comp = oAdd(oAdd(x, 5), 1);
+        it('should create a chainable function that returns an observable', () => {
+            const x = pub(3);
+            const comp = add(add(x, 5), 1);
             eq(comp.get(), 9);
 
             x.set(5);
@@ -109,17 +103,17 @@ describe('observable', function() {
         });
     });
 
-    describe('#snapshot()', function() {
-        let snapshot = observable.snapshot;
+    describe('#snapshot()', () => {
+        const snapshot = observable.snapshot;
 
-        it('should work trivially for concreate values', function() {
+        it('should work trivially for concreate values', () => {
             eq(snapshot(1), 1);
             eq(snapshot([]), []);
             eq(snapshot({}), {});
             eq(snapshot({a: 1}), {a: 1});
         });
 
-        it('should recursively lower observables', function() {
+        it('should recursively lower observables', () => {
             eq(snapshot(pub(1)), 1);
         });
     });

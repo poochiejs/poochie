@@ -5,7 +5,10 @@
 //
 
 // Return a clone of the input object using prototype inheritance.
-export function Clone() {}
+export function Clone() {
+    //
+}
+
 export function clone(o) {
     Clone.prototype = o;
     return new Clone();
@@ -14,7 +17,7 @@ export function clone(o) {
 // Return the union of 'o1' and 'o2'.  When both contain the
 // same key, the value in 'o2' takes precedence.
 export function mixin(o1, o2) {
-    let o3 = {};
+    const o3 = {};
     let k;
     let i;
     let keys = Object.keys(o1);
