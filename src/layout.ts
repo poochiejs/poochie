@@ -25,18 +25,9 @@ function setPosition(e1, pos) {
 // Concatenate elements
 function cat(as, xs, pos) {
     function setPositions(xs2) {
-        const xs3 = [];
-        for (let i = 0; i < xs2.length; i++) {
-            xs3[i] = setPosition(xs2[i], pos);
-        }
-        return xs3;
+        return xs2.map((x) => setPosition(x, pos));
     }
-    let ys;
-    if (xs instanceof Observable) {
-        ys = xs.map(setPositions);
-    } else {
-        ys = setPositions(xs);
-    }
+    const ys = xs instanceof Observable ? xs.map(setPositions) : setPositions(xs);
     return element({name: 'div', contents: ys});
 }
 

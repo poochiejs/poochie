@@ -18,16 +18,10 @@ export function clone(o) {
 // same key, the value in 'o2' takes precedence.
 export function mixin(o1, o2) {
     const o3 = {};
-    let k;
-    let i;
-    let keys = Object.keys(o1);
-    for (i = 0; i < keys.length; i++) {
-        k = keys[i];
+    for (const k of Object.keys(o1)) {
         o3[k] = o1[k];
     }
-    keys = Object.keys(o2);
-    for (i = 0; i < keys.length; i++) {
-        k = keys[i];
+    for (const k of Object.keys(o2)) {
         if (o2[k] !== undefined) {
             o3[k] = o2[k];
         }

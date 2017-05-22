@@ -134,10 +134,7 @@ export function snapshot(o) {
                 return o.map(snapshot);
             } else {
                 const o2 = {};
-                let k;
-                const keys = Object.keys(o);
-                for (let i = 0; i < keys.length; i++) {
-                    k = keys[i];
+                for (const k of Object.keys(o)) {
                     o2[k] = snapshot(o[k]);
                 }
                 return o2;
