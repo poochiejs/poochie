@@ -1,38 +1,38 @@
-import { gap, hcat, vcat} from './layout';
 import { deepEqual } from 'assert';
-import { ReactiveElement, element } from './dom';
+import { element, ReactiveElement } from './dom';
+import { gap, hcat, vcat} from './layout';
 import { publisher } from './observable';
 
-describe('layout', function() {
-    let eq = deepEqual;
+describe('layout', () => {
+    const eq = deepEqual;
 
-    describe('#gap()', function() {
-        it('should have the same width and height', function() {
+    describe('#gap()', () => {
+        it('should have the same width and height', () => {
             eq(gap(2).style, {width: '2px', height: '2px'});
         });
     });
 
-    describe('#hcat()', function() {
-        it('should create an empty div if given zero elements', function() {
+    describe('#hcat()', () => {
+        it('should create an empty div if given zero elements', () => {
             eq(hcat([]).name, 'div');
         });
 
-        it('should have an array as its contents', function() {
+        it('should have an array as its contents', () => {
             eq(hcat([]).contents instanceof Array, true);
         });
     });
 
-    describe('#hcat() wraps with div', function() {
-        let div = hcat([gap(1), gap(2)]);
-        let g1 = div.contents[0];
-        let g2 = div.contents[1];
+    describe('#hcat() wraps with div', () => {
+        const div = hcat([gap(1), gap(2)]);
+        const g1 = div.contents[0];
+        const g2 = div.contents[1];
 
         // g1 is a ReactiveElement
-        it('should be of type ReactiveElement', function() {
+        it('should be of type ReactiveElement', () => {
             eq(g1 instanceof ReactiveElement, true);
         });
 
-        it('should left-align contents by default', function() {
+        it('should left-align contents by default', () => {
             eq(g1.style.cssFloat, 'left');
             eq(g1.style.clear, 'none');
             eq(g2.style.cssFloat, 'left');
@@ -40,22 +40,22 @@ describe('layout', function() {
         });
     });
 
-    describe('#hcat() with observable list', function() {
-        let div = hcat({}, publisher([gap(1), gap(2)]));
-        let g1 = div.contents.get()[0];
+    describe('#hcat() with observable list', () => {
+        const div = hcat({}, publisher([gap(1), gap(2)]));
+        const g1 = div.contents.get()[0];
 
-        it('should work with observable elements', function() {
+        it('should work with observable elements', () => {
             eq(g1.style.clear, 'none');
             eq(g1.style.clear, 'none');
         });
     });
 
-    describe('#vcat()', function() {
-        let div = vcat([gap(1), gap(2)]);
-        let g1 = div.contents[0];
-        let g2 = div.contents[1];
+    describe('#vcat()', () => {
+        const div = vcat([gap(1), gap(2)]);
+        const g1 = div.contents[0];
+        const g2 = div.contents[1];
 
-        it('should left-align contents by default', function() {
+        it('should left-align contents by default', () => {
             eq(g1.style.cssFloat, 'left');
             eq(g1.style.clear, 'both');
             eq(g2.style.cssFloat, 'left');
@@ -64,11 +64,11 @@ describe('layout', function() {
     });
 
     // vcat can right-align elements
-    describe('#vcat() can right-align', function() {
-        let div = vcat({align: 'right'}, [gap(1), gap(2)]);
-        let g1 = div.contents[0];
-        let g2 = div.contents[1];
-        it('should right-align contents if requested', function() {
+    describe('#vcat() can right-align', () => {
+        const div = vcat({align: 'right'}, [gap(1), gap(2)]);
+        const g1 = div.contents[0];
+        const g2 = div.contents[1];
+        it('should right-align contents if requested', () => {
             eq(g1.style.cssFloat, 'right');
             eq(g1.style.clear, 'both');
             eq(g2.style.cssFloat, 'right');
@@ -77,20 +77,20 @@ describe('layout', function() {
     });
 
     // vcat also accepts observable lists of elements.
-    describe('#vcat() with observable list', function() {
-        let div = vcat({}, publisher([gap(1), gap(2)]));
-        let g1 = div.contents.get()[0];
-        it('should work with observable elements', function() {
+    describe('#vcat() with observable list', () => {
+        const div = vcat({}, publisher([gap(1), gap(2)]));
+        const g1 = div.contents.get()[0];
+        it('should work with observable elements', () => {
             eq(g1.style.cssFloat, 'left');
         });
     });
 
-    describe('#vcat() unknown element size', function() {
-        let br = element({name: 'br'});
-        let div = vcat([br, br]);
-        let b1 = div.contents[0];
-        let b2 = div.contents[1];
-        it('should work with unsized elements', function() {
+    describe('#vcat() unknown element size', () => {
+        const br = element({name: 'br'});
+        const div = vcat([br, br]);
+        const b1 = div.contents[0];
+        const b2 = div.contents[1];
+        it('should work with unsized elements', () => {
             eq(b1.style.cssFloat, 'left');
             eq(b1.style.clear, 'both');
             eq(b2.style.cssFloat, 'left');

@@ -2,9 +2,9 @@
 // A JavaScript library for 2D layout
 //
 
-import { element } from './dom'
-import { clone, mixin } from './object'
-import { Observable } from './observable'
+import { element } from './dom';
+import { clone, mixin } from './object';
+import { Observable } from './observable';
 
 // gap(n)
 //
@@ -12,12 +12,12 @@ import { Observable } from './observable'
 export function gap(n) {
     return element({
         name: 'div',
-        style: {width: n + 'px', height: n + 'px'}
+        style: {width: n + 'px', height: n + 'px'},
     });
 }
 
 function setPosition(e1, pos) {
-    let e2 = clone(e1);
+    const e2 = clone(e1);
     e2.style = e2.style ? mixin(e2.style, pos) : pos;
     return e2;
 }
@@ -25,7 +25,7 @@ function setPosition(e1, pos) {
 // Concatenate elements
 function cat(as, xs, pos) {
     function setPositions(xs2) {
-        let xs3 = [];
+        const xs3 = [];
         for (let i = 0; i < xs2.length; i++) {
             xs3[i] = setPosition(xs2[i], pos);
         }
@@ -41,7 +41,7 @@ function cat(as, xs, pos) {
 }
 
 // Concatenate elements horizontally
-let hPos = {cssFloat: 'left', clear: 'none'};
+const hPos = {cssFloat: 'left', clear: 'none'};
 export function hcat(as, xs?) {
     if (as && (as instanceof Array || as instanceof Observable)) {
         xs = as;
@@ -51,13 +51,13 @@ export function hcat(as, xs?) {
 }
 
 // Concatenate elements vertically
-let vPos = {cssFloat: 'left', clear: 'both'};
-let vPosRight = {cssFloat: 'right', clear: 'both'};
+const vPos = {cssFloat: 'left', clear: 'both'};
+const vPosRight = {cssFloat: 'right', clear: 'both'};
 export function vcat(as, xs?) {
     if (as && (as instanceof Array || as instanceof Observable)) {
         xs = as;
         as = {};
     }
-    let pos = as.align === 'right' ? vPosRight : vPos;
+    const pos = as.align === 'right' ? vPosRight : vPos;
     return cat(as, xs, pos);
 }
