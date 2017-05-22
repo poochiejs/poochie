@@ -8,7 +8,7 @@
     "type": "git"
   },
   "scripts": {
-    "test": "tslint src/*.ts && tsc && mocha lib/",
+    "test": "tslint -p tsconfig.json && tsc && mocha lib/",
     "coverage": "nyc -x 'lib/*test.js' npm test && nyc --reporter=lcov report"
   },
   "devDependencies": {
