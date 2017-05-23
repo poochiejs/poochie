@@ -21,10 +21,61 @@
 //
 
 import * as observable from './observable';
-const intervalTimers = [];
+
+interface IDictionary {
+    [key: string]: any;
+}
+
+export class ReactiveElement {
+    public name: string;
+    public attributes: IDictionary;
+    public style: IDictionary;
+    public contents: any | any[];
+    public handlers: IDictionary;
+    public focus: any;
+
+    constructor(as: string | IDictionary) {
+        if (typeof as === 'string') {
+            as = {name: as};
+        }
+
+        this.name = as.name;
+
+        if (as.attributes !== undefined) {
+            this.attributes = as.attributes;
+        }
+
+        if (as.style !== undefined) {
+            this.style = as.style;
+        }
+
+        if (as.contents !== undefined) {
+            this.contents = as.contents;
+        }
+
+        if (as.handlers !== undefined) {
+            this.handlers = as.handlers;
+        }
+
+        if (as.focus instanceof observable.Observable) {
+            this.focus = as.focus;
+        }
+    }
+
+    public render(): HTMLElement {
+        return createElement(this);
+    }
+}
+
+//
+// element({name, attributes, style, contents, handlers})
+//
+export function element(as: string | {[id: string]: any}): ReactiveElement {
+    return new ReactiveElement(as);
+}
 
 // Add style 's' with value 'style[s]' to the DOM element 'e'.
-function addStyle(e, subscriber, style, s) {
+function addStyle(e: ReactiveElement, subscriber, style, s): void {
     if (style[s] instanceof observable.Observable) {
         e.style[s] = style[s].get();
         const o = style[s].map((v) => { e.style[s] = v; });
@@ -35,7 +86,7 @@ function addStyle(e, subscriber, style, s) {
 }
 
 // Add style from 'style' object to the DOM element 'e'.
-function addStyles(e, subscriber, style) {
+function addStyles(e: ReactiveElement, subscriber, style): void {
     const keys = Object.keys(style);
     for (const k of keys) {
         if (style[k] !== undefined) {
@@ -48,7 +99,7 @@ function addStyles(e, subscriber, style) {
 // attribute's value is 'undefined', it will be ignored.  If the
 // attribute's value is an observable, then any time its value is
 // 'undefined', the attribute will be removed.
-function addAttribute(e, subscriber, k, v) {
+function addAttribute(e: HTMLElement, subscriber, k: string, v: any): void {
     if (v instanceof observable.Observable) {
         const val = v.get();
         if (val !== undefined) {
@@ -68,7 +119,7 @@ function addAttribute(e, subscriber, k, v) {
 }
 
 // Add attributes from 'as' to the DOM element 'e'.
-function addAttributes(e, subscriber, as) {
+function addAttributes(e: HTMLElement, subscriber, as: IDictionary): void {
     const keys = Object.keys(as);
     for (const k of keys) {
         if (k !== 'style' && as[k] !== undefined) {
@@ -77,7 +128,7 @@ function addAttributes(e, subscriber, as) {
     }
 }
 
-function setChildren(subscriber, e, xs) {
+function setChildren(subscriber, e: HTMLElement, xs): void {
     e.innerHTML = '';
     for (const x of xs) {
         const nd = render(x);
@@ -86,7 +137,7 @@ function setChildren(subscriber, e, xs) {
 }
 
 // Add contents from array 'xs' to the DOM element 'e'.
-function addContents(e, subscriber, xs) {
+function addContents(e: HTMLElement, subscriber, xs): void {
     if (typeof xs === 'string') {
         e.appendChild(global.document.createTextNode(xs));
     } else {
@@ -103,7 +154,7 @@ function addContents(e, subscriber, xs) {
 }
 
 // Add handlers from 'es' to the DOM element 'e'.
-function addEventHandlers(e, subscriber, es) {
+function addEventHandlers(e: HTMLElement, subscriber, es): void {
     const keys = Object.keys(es);
     for (const k of keys) {
         e.addEventListener(k, es[k]);
@@ -111,7 +162,7 @@ function addEventHandlers(e, subscriber, es) {
 }
 
 // Add focus handler to the DOM element 'e'.
-function addFocusHandler(e, subscriber, oFocus) {
+function addFocusHandler(e: HTMLElement, subscriber, oFocus): void {
     function setFocus(focus) {
         function onTimeout() {
             if (focus) {
@@ -130,9 +181,18 @@ function addFocusHandler(e, subscriber, oFocus) {
     subscriber.addArg(oFocus.map(setFocus));
 }
 
-// Create a DOM element with tag name 'nm', attributes object 'as', style object 'sty',
-// an array of subelements 'xs', and an object of event handlers 'es'.
-export function createElementAndSubscriber(ps) {
+// Create a DOM element with tag name 'name', attributes object 'attributes', style object 'style',
+// an array of subelements 'contents', and an object of event handlers 'handlers'.
+interface ICreateElementParams {
+    name?: string;
+    attributes?: IDictionary;
+    style?: IDictionary;
+    contents?: string | any[] | observable.Observable;
+    handlers?: IDictionary;
+    focus?: observable.Observable;
+}
+
+export function createElementAndSubscriber(ps: ICreateElementParams) {
 
     // Create DOM node
     const e = global.document.createElement(ps.name);
@@ -170,8 +230,20 @@ export function createElementAndSubscriber(ps) {
         subscriber,
     };
 }
+//
+// Render a string or object with a render method, such as a ReactiveElement.
+export function render(e) {
+    if (typeof e === 'string') {
+        return global.document.createTextNode(e);
+    } else if (typeof e.render === 'function') {
+        return render(e.render());
+    }
+    return e;
+}
 
-export function createElement(ps) {
+const intervalTimers = [];
+
+export function createElement(ps: string | ICreateElementParams) {
     if (typeof ps === 'string') {
         ps = {name: ps};
     }
@@ -193,54 +265,4 @@ export function clearIntervalTimers() {
     for (const timer of intervalTimers) {
         clearInterval(timer);
     }
-}
-
-//
-// element({name, attributes, style, contents, handlers})
-//
-export function ReactiveElement(as) {
-
-    if (typeof as === 'string') {
-        as = {name: as};
-    }
-
-    this.name = as.name;
-
-    if (as.attributes !== undefined) {
-        this.attributes = as.attributes;
-    }
-
-    if (as.style !== undefined) {
-        this.style = as.style;
-    }
-
-    if (as.contents !== undefined) {
-        this.contents = as.contents;
-    }
-
-    if (as.handlers !== undefined) {
-        this.handlers = as.handlers;
-    }
-
-    if (as.focus instanceof observable.Observable) {
-        this.focus = as.focus;
-    }
-}
-
-ReactiveElement.prototype.render = function() {
-    return createElement(this);
-};
-
-export function element(as) {
-    return new ReactiveElement(as);
-}
-
-// Render a string or object with a render method, such as a ReactiveElement.
-export function render(e) {
-    if (typeof e === 'string') {
-        return global.document.createTextNode(e);
-    } else if (typeof e.render === 'function') {
-        return render(e.render());
-    }
-    return e;
 }

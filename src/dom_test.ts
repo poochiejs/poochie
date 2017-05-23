@@ -30,7 +30,9 @@ describe('dom', () => {
         });
 
         it('should accept a list of vdom elements for its contents', () => {
-            eq(dom.element({name: 'p', contents: [dom.element('br')]}).render().childNodes[0].tagName, 'BR');
+            const e = dom.element({name: 'p', contents: [dom.element('br')]});
+            const he = e.render().childNodes[0] as HTMLElement;
+            eq(he.tagName, 'BR');
         });
 
         it('should accept observables for its contents', () => {

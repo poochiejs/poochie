@@ -33,7 +33,7 @@ describe('observable', () => {
 
         it('should observe changes to publishers', () => {
             const comp = observable.subscriber([x, y], (a, b) => a + b);
-            eq(comp.set, undefined);
+            eq('set' in comp, false);
             eq(comp.get(), 9);
 
             x.set(5);
