@@ -118,4 +118,9 @@ describe('observable', () => {
         });
     });
 
+    describe('#get()', () => {
+        it('should return null', () => {
+            eq(new observable.Observable().get(), null);
+        });
+    });
 });
