@@ -8,8 +8,8 @@
     "type": "git"
   },
   "scripts": {
-    "test": "tslint -p tsconfig.json && tsc && mocha lib/",
-    "coverage": "nyc -x 'lib/*test.js' npm test && nyc --reporter=lcov report"
+    "test": "tslint -p tsconfig.json && mocha",
+    "coverage": "nyc npm test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",
@@ -18,8 +18,30 @@
     "jsdom": "^10.1.0",
     "mocha": "^3.4.1",
     "nyc": "^10.3.2",
+    "source-map-support": "^0.4.15",
     "test": "^0.6.0",
+    "ts-node": "^3.0.4",
     "tslint": "^5.2.0",
     "typescript": "^2.3.2"
+  },
+  "nyc": {
+    "include": [
+      "src/*.ts"
+    ],
+    "exclude": [
+      "src/*_test.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
   }
 }
