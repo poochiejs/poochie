@@ -2,14 +2,14 @@
 // A JavaScript library for 2D layout
 //
 
-import { element } from './dom';
+import { element, ReactiveElement } from './dom';
 import { clone, mixin } from './object';
 import { Observable } from './observable';
 
 // gap(n)
 //
 //     Create empty space of 'n' pixels wide and 'n' pixels tall.
-export function gap(n) {
+export function gap(n: number): ReactiveElement {
     return element({
         name: 'div',
         style: {width: n + 'px', height: n + 'px'},
@@ -22,8 +22,19 @@ function setPosition(e1, pos) {
     return e2;
 }
 
+interface IPos {
+    cssFloat: string;
+    clear: string;
+}
+
+interface IAttrs {
+  align?: string;
+}
+
+type Elements = ReactiveElement[] | Observable;
+
 // Concatenate elements
-function cat(as, xs, pos) {
+function cat(xs: Elements, pos: IPos): ReactiveElement {
     function setPositions(xs2) {
         return xs2.map((x) => setPosition(x, pos));
     }
@@ -32,23 +43,26 @@ function cat(as, xs, pos) {
 }
 
 // Concatenate elements horizontally
-const hPos = {cssFloat: 'left', clear: 'none'};
-export function hcat(as, xs?) {
+const hPos: IPos = {cssFloat: 'left', clear: 'none'};
+export function hcat(as: null | IAttrs | Elements, xs?: Elements): ReactiveElement {
     if (as && (as instanceof Array || as instanceof Observable)) {
         xs = as;
         as = {};
     }
-    return cat(as, xs, hPos);
+    return cat(xs, hPos);
 }
 
 // Concatenate elements vertically
-const vPos = {cssFloat: 'left', clear: 'both'};
-const vPosRight = {cssFloat: 'right', clear: 'both'};
-export function vcat(as, xs?) {
+const vPos: IPos = {cssFloat: 'left', clear: 'both'};
+const vPosRight: IPos = {cssFloat: 'right', clear: 'both'};
+export function vcat(as: null | IAttrs | Elements, xs?: Elements): ReactiveElement {
+    let attrs: IAttrs;
     if (as && (as instanceof Array || as instanceof Observable)) {
         xs = as;
-        as = {};
+        attrs = {};
+    } else {
+        attrs = as;
     }
-    const pos = as.align === 'right' ? vPosRight : vPos;
-    return cat(as, xs, pos);
+    const pos = attrs.align === 'right' ? vPosRight : vPos;
+    return cat(xs, pos);
 }

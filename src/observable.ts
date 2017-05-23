@@ -5,119 +5,141 @@
 // Publishers and Subscribers share the Observable
 // interface, which includes a get() and subscribe()
 // function.
-export function Observable() {
-    this.subscribers = [];
-}
+export class Observable {
+    public subscribers: any[];
 
-Observable.prototype.subscribe = function(f) {
-    this.subscribers.push(f);
-    return this;
-};
-
-Observable.prototype.invalidateSubscribers = function() {
-    for (const f of this.subscribers) {
-        f(this);
+    constructor() {
+      this.subscribers = [];
     }
-};
 
-export function Publisher(v) {
-    this.value = v;
+    public subscribe(f) {
+        this.subscribers.push(f);
+        return this;
+    }
+
+    public invalidateSubscribers() {
+        for (const f of this.subscribers) {
+            f(this);
+        }
+    }
+
+    // o.map(f) is a shorthand for observable.subscriber([o], f)
+    public map(f) {
+        return subscriber([this], f);
+    }
+
+    public get() {
+        return null;
+    }
 }
 
-// Observable values
-Publisher.prototype = new Observable();
-Publisher.prototype.constructor = Publisher;
+// tslint:disable-next-line:max-classes-per-file
+export class Publisher extends Observable {
+    public value: any;
 
-Publisher.prototype.set = function(v) {
-    this.value = v;
-    this.invalidateSubscribers();
-    return this;
-};
+    constructor(v: any) {
+        super();
+        this.value = v;
+    }
 
-Publisher.prototype.get = function() {
-    return this.value;
-};
+    public set(v: any) {
+        this.value = v;
+        this.invalidateSubscribers();
+        return this;
+    }
+
+    public get(): any {
+        return this.value;
+    }
+
+}
 
 // Observable computations.  subscriber() takes a list of observables
 // and a callback function and returns an observable.  Any time
 // a value is requested AND an input has changed, the given callback
 // is executed, and its return value is returned.
-export function Subscriber(args, f) {
-    this.valid = false;
-    this.f = f;
-    this.oArgs = null;
-    this.args = [];
+// tslint:disable-next-line:max-classes-per-file
+export class Subscriber extends Observable {
+    public valid: boolean;
+    public value: any;
+    public f: any;
+    public oArgs: null | Observable;
+    public args: any[];
 
-    const me = this;  // Avoid 'this' ambiguity.
-
-    // Handle an observable list of subscribers.
-    if (args instanceof Observable) {
-        this.oArgs = args;
-        args = this.oArgs.get();
-        this.oArgs.subscribe(() => {
-            // TODO: unsubscribe previous values.
-            me.args = [];
-            const xs = me.oArgs.get();
-            for (const x of xs) {
-                me.addArg(x);
-            }
-            me.invalidate();
-        });
-    }
-
-    for (const arg of args) {
-        me.addArg(arg);
-    }
-}
-
-Subscriber.prototype = new Observable();
-Subscriber.prototype.constructor = Subscriber;
-
-Subscriber.prototype.addArg = function(o) {
-    this.args.push(o);
-    const me = this;
-    if (o instanceof Observable) {
-        o.subscribe(() => {
-            me.invalidate();
-        });
-    }
-};
-
-Subscriber.prototype.invalidate = function() {
-    if (this.valid) {
+    constructor(args: any[] | Observable, f) {
+        super();
         this.valid = false;
-        this.invalidateSubscribers();
-    }
-};
+        this.f = f;
+        this.oArgs = null;
+        this.args = [];
 
-Subscriber.prototype.get = function() {
-    if (this.valid) {
-        return this.value;
-    } else {
-        const vals = this.args.map((o) => o instanceof Observable ? o.get() : o);
-        const oldValue = this.value;
-        this.value = this.f.apply(null, vals);
-        this.valid = true;
+        const me = this;  // Avoid 'this' ambiguity.
 
-        if (this.value !== oldValue && this.subscribers) {
-            const me = this;
-            this.subscribers.forEach((f) => {
-                f(me);
+        let argsArr: any[];
+
+        // Handle an observable list of subscribers.
+        if (args instanceof Observable) {
+            this.oArgs = args;
+            argsArr = this.oArgs.get();
+            this.oArgs.subscribe(() => {
+                // TODO: unsubscribe previous values.
+                me.args = [];
+                const xs = me.oArgs.get();
+                for (const x of xs) {
+                    me.addArg(x);
+                }
+                me.invalidate();
             });
+        } else {
+            argsArr = args;
         }
 
-        return this.value;
+        for (const arg of argsArr) {
+            me.addArg(arg);
+        }
     }
-};
 
-export function subscriber(args, f) {
-    return new Subscriber(args, f);
+    public addArg(o) {
+        this.args.push(o);
+        const me = this;
+        if (o instanceof Observable) {
+            o.subscribe(() => {
+                me.invalidate();
+            });
+        }
+    }
+
+    public invalidate() {
+        if (this.valid) {
+            this.valid = false;
+            this.invalidateSubscribers();
+        }
+    }
+
+    public get() {
+        if (this.valid) {
+            return this.value;
+        } else {
+            const vals = this.args.map((o) => o instanceof Observable ? o.get() : o);
+            const oldValue = this.value;
+            this.value = this.f.apply(null, vals);
+            this.valid = true;
+
+            if (this.value !== oldValue && this.subscribers) {
+                const me = this;
+                this.subscribers.forEach((f) => {
+                    f(me);
+                });
+            }
+
+            return this.value;
+        }
+    }
 }
 
-// o.map(f) is a shorthand for observable.subscriber([o], f)
-Observable.prototype.map = function(f) {
-    return subscriber([this], f);
-};
+export function subscriber(args: any[] | Observable, f: any): Subscriber {
+    return new Subscriber(args, f);
+}
 
 // Handy function to lift a raw function into the observable realm
 export function lift(f) {
@@ -145,6 +167,6 @@ export function snapshot(o) {
     }
 }
 
-export function publisher(v) {
+export function publisher(v): Publisher {
     return new Publisher(v);
 }

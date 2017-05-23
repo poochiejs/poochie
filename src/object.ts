@@ -4,6 +4,10 @@
 //     object
 //
 
+interface IDictionary {
+    [key: string]: any;
+}
+
 // Return a clone of the input object using prototype inheritance.
 export function Clone() {
     //
@@ -16,7 +20,7 @@ export function clone(o) {
 
 // Return the union of 'o1' and 'o2'.  When both contain the
 // same key, the value in 'o2' takes precedence.
-export function mixin(o1, o2) {
+export function mixin(o1: IDictionary, o2: IDictionary): IDictionary {
     const o3 = {};
     for (const k of Object.keys(o1)) {
         o3[k] = o1[k];
@@ -31,6 +35,6 @@ export function mixin(o1, o2) {
 
 // Return the mixin of an array of objects
 // cascade(xs) === {} `mixin` xs[0] `mixin` xs[1] `mixin` ... `mixin` xs[-1]
-export function cascade(xs) {
+export function cascade(xs: IDictionary[]): IDictionary {
     return xs.reduce(mixin, {});
 }
