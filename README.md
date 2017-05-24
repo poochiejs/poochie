@@ -12,9 +12,9 @@ Poochie is one outrageous microframework.
 Examples
 ---
 
-[Poochie - TodoMVC] (https://github.com/garious/poochie-todomvc)
+[Poochie - TodoMVC] (https://github.com/poochiejs/poochie-todomvc)
 
-[More Examples] (https://github.com/garious/poochie-examples)
+[More Examples] (https://github.com/poochiejs/poochie-examples)
 
 
 Why Poochie
