@@ -5,6 +5,6 @@ cache: yarn
 sudo: false
 addons:
   code_climate:
-    repo_token: efb7522eec30499991fe74d59051679a9ae2b5caf53fbb004b62ea83825cdc56
+    repo_token: 5d31667729cd93bd9ed92cdd1255f40289e7863a79b4566bdaaf1a2978bc0cab
 after_success:
   - node_modules/.bin/codeclimate-test-reporter  < coverage/lcov.info
