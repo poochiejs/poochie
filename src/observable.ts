@@ -6,7 +6,7 @@
 // interface, which includes a get() and subscribe()
 // function.
 export class Observable {
-    public subscribers: Array<(val: any) => void>;
+    protected subscribers: Array<(val: any) => void>;
 
     constructor() {
       this.subscribers = [];
@@ -14,12 +14,6 @@ export class Observable {
 
     public subscribe(f: (val: any) => void): void {
         this.subscribers.push(f);
-    }
-
-    public invalidateSubscribers(): void {
-        for (const f of this.subscribers) {
-            f(undefined);
-        }
     }
 
     // o.map(f) is a shorthand for observable.subscriber([o], f)
@@ -30,11 +24,17 @@ export class Observable {
     public get(): any {
         return null;
     }
+
+    protected invalidateSubscribers(): void {
+        for (const f of this.subscribers) {
+            f(undefined);
+        }
+    }
 }
 
 // tslint:disable-next-line:max-classes-per-file
 export class Publisher extends Observable {
-    public value: any;
+    private value: any;
 
     constructor(v: any) {
         super();
@@ -60,9 +60,9 @@ export class Publisher extends Observable {
 export class Subscriber extends Observable {
     public valid: boolean;
     public value: any;
-    public f: any;
-    public oArgs: null | Observable;
-    public args: any[];
+    private f: any;
+    private oArgs: null | Observable;
+    private args: any[];
 
     constructor(args: any[] | Observable, f: (...rest) => any) {
         super();
@@ -102,6 +102,10 @@ export class Subscriber extends Observable {
                 this.invalidate();
             });
         }
+    }
+
+    public hasArgs(): boolean {
+        return this.args.length > 0;
     }
 
     public invalidate(): void {
