@@ -6,29 +6,28 @@
 // interface, which includes a get() and subscribe()
 // function.
 export class Observable {
-    public subscribers: any[];
+    public subscribers: Array<(val: any) => void>;
 
     constructor() {
       this.subscribers = [];
     }
 
-    public subscribe(f) {
+    public subscribe(f: (val: any) => void): void {
         this.subscribers.push(f);
-        return this;
     }
 
-    public invalidateSubscribers() {
+    public invalidateSubscribers(): void {
         for (const f of this.subscribers) {
-            f(this);
+            f(undefined);
         }
     }
 
     // o.map(f) is a shorthand for observable.subscriber([o], f)
-    public map(f) {
+    public map(f: (val: any) => any): Subscriber {
         return subscriber([this], f);
     }
 
-    public get() {
+    public get(): any {
         return null;
     }
 }
@@ -42,10 +41,9 @@ export class Publisher extends Observable {
         this.value = v;
     }
 
-    public set(v: any) {
+    public set(v: any): void {
         this.value = v;
         this.invalidateSubscribers();
-        return this;
     }
 
     public get(): any {
@@ -66,14 +64,12 @@ export class Subscriber extends Observable {
     public oArgs: null | Observable;
     public args: any[];
 
-    constructor(args: any[] | Observable, f) {
+    constructor(args: any[] | Observable, f: (...rest) => any) {
         super();
         this.valid = false;
         this.f = f;
         this.oArgs = null;
         this.args = [];
-
-        const me = this;  // Avoid 'this' ambiguity.
 
         let argsArr: any[];
 
@@ -83,40 +79,39 @@ export class Subscriber extends Observable {
             argsArr = this.oArgs.get();
             this.oArgs.subscribe(() => {
                 // TODO: unsubscribe previous values.
-                me.args = [];
-                const xs = me.oArgs.get();
+                this.args = [];
+                const xs = this.oArgs.get();
                 for (const x of xs) {
-                    me.addArg(x);
+                    this.addArg(x);
                 }
-                me.invalidate();
+                this.invalidate();
             });
         } else {
             argsArr = args;
         }
 
         for (const arg of argsArr) {
-            me.addArg(arg);
+            this.addArg(arg);
         }
     }
 
-    public addArg(o) {
+    public addArg(o: any): void {
         this.args.push(o);
-        const me = this;
         if (o instanceof Observable) {
             o.subscribe(() => {
-                me.invalidate();
+                this.invalidate();
             });
         }
     }
 
-    public invalidate() {
+    public invalidate(): void {
         if (this.valid) {
             this.valid = false;
             this.invalidateSubscribers();
         }
     }
 
-    public get() {
+    public get(): any {
         if (this.valid) {
             return this.value;
         } else {
@@ -126,9 +121,8 @@ export class Subscriber extends Observable {
             this.valid = true;
 
             if (this.value !== oldValue && this.subscribers) {
-                const me = this;
                 this.subscribers.forEach((f) => {
-                    f(me);
+                    f(this.value);
                 });
             }
 
@@ -142,12 +136,12 @@ export function subscriber(args: any[] | Observable, f: any): Subscriber {
 }
 
 // Handy function to lift a raw function into the observable realm
-export function lift(f) {
+export function lift(f: (...xs) => any): (...ys) => Subscriber {
     return (...args) => subscriber(args, f);
 }
 
 // Handy function to capture the current state of an object containing observables
-export function snapshot(o) {
+export function snapshot(o: any): any {
     if (typeof o === 'object') {
         if (o instanceof Observable) {
             return snapshot(o.get());
@@ -167,6 +161,6 @@ export function snapshot(o) {
     }
 }
 
-export function publisher(v): Publisher {
+export function publisher(v: any): Publisher {
     return new Publisher(v);
 }
