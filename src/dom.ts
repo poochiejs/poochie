@@ -250,7 +250,7 @@ export function createElement(ps: string | ICreateElementParams) {
 
     const obj = createElementAndSubscriber(ps);
 
-    if (obj.subscriber.args.length > 0) {
+    if (obj.subscriber.hasArgs()) {
         const id = setInterval(() => { obj.subscriber.get(); }, 30);
         intervalTimers.push(id);
     }
